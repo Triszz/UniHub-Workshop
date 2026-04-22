@@ -7,16 +7,16 @@ Xây dựng theo kiến trúc Modular Monolith với Node.js, React, và React N
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Backend API | Node.js 20 + Express + TypeScript |
-| ORM | Prisma |
-| Web Frontend | React 18 + Vite + TailwindCSS |
-| Mobile | React Native (Expo) |
-| Primary DB | PostgreSQL 16 |
-| Cache / Queue | Redis 7 + BullMQ |
-| Email | Nodemailer (Mailtrap) |
-| AI Summary | OpenAI gpt-4o-mini |
+| Layer         | Technology                        |
+| ------------- | --------------------------------- |
+| Backend API   | Node.js 20 + Express + TypeScript |
+| ORM           | Prisma                            |
+| Web Frontend  | React 18 + Vite + TailwindCSS     |
+| Mobile        | React Native (Expo)               |
+| Primary DB    | PostgreSQL 16                     |
+| Cache / Queue | Redis 7 + BullMQ                  |
+| Email         | Nodemailer (Mailtrap)             |
+| AI Summary    | OpenAI gpt-4o-mini                |
 
 ---
 
@@ -24,7 +24,7 @@ Xây dựng theo kiến trúc Modular Monolith với Node.js, React, và React N
 
 - **Docker** & **Docker Compose** (v2+)
 - **Node.js** 20+ và **npm** 9+
-- *(Mobile only)* Expo Go app trên điện thoại Android
+- _(Mobile only)_ Expo Go app trên điện thoại Android
 
 ---
 
@@ -100,6 +100,7 @@ npm run seed                  # tạo dữ liệu mẫu
 ```
 
 Seed tạo ra:
+
 - **5 workshops** (3 free, 2 paid) cho 5 ngày tới
 - **100 sinh viên** (email: student001@university.edu.vn ... password: Password123!)
 - **2 organizer** (organizer@university.edu.vn / OrgAdmin2024!)
@@ -127,17 +128,18 @@ cd apps/web && npm run dev     # → http://localhost:5173
 
 ## Tài khoản mẫu sau khi seed
 
-| Role | Email | Password |
-|------|-------|----------|
-| Organizer | organizer@university.edu.vn | OrgAdmin2024! |
-| Student | student001@university.edu.vn | Password123! |
-| Check-in Staff | staff001@university.edu.vn | Staff2024! |
+| Role           | Email                        | Password      |
+| -------------- | ---------------------------- | ------------- |
+| Organizer      | organizer@university.edu.vn  | OrgAdmin2024! |
+| Student        | student001@university.edu.vn | Password123!  |
+| Check-in Staff | staff001@university.edu.vn   | Staff2024!    |
 
 ---
 
 ## Kiểm tra các tính năng chính
 
 ### Test Rate Limiting
+
 ```bash
 # Gửi 20 request liên tiếp → lần thứ 11 trở đi nhận 429
 for i in {1..20}; do
@@ -150,6 +152,7 @@ done
 ```
 
 ### Test Circuit Breaker
+
 ```bash
 # Set payment gateway lỗi 100%
 docker-compose exec api \
@@ -160,6 +163,7 @@ docker-compose exec api \
 ```
 
 ### Test Idempotency
+
 ```bash
 KEY="test-$(uuidgen)"
 # Gọi 2 lần với cùng key → chỉ charge 1 lần
@@ -170,6 +174,7 @@ curl -X POST http://localhost:3000/api/v1/payments/{id} \
 ```
 
 ### Test CSV Import
+
 ```bash
 # Copy file CSV vào volume và trigger import
 docker cp seed/students.csv unihub_api:/data/students.csv
@@ -203,7 +208,7 @@ unihub-workshop/
 ## API Documentation
 
 Swagger UI tại: http://localhost:3000/api/docs  
-*(tự động generate từ JSDoc annotations)*
+_(tự động generate từ JSDoc annotations)_
 
 ---
 
@@ -220,6 +225,7 @@ npm run test:integration    # integration tests (cần DB running)
 ## Troubleshooting
 
 **Prisma migration fail:**
+
 ```bash
 docker-compose down -v      # xóa volume DB cũ
 docker-compose up -d postgres redis
@@ -227,11 +233,13 @@ cd apps/api && npx prisma migrate deploy
 ```
 
 **Redis connection refused:**
+
 ```bash
 docker-compose up -d redis
 # Kiểm tra: docker-compose ps
 ```
 
 **Expo app không kết nối được API:**
+
 - Thay `localhost` bằng IP máy tính trong `apps/mobile/.env`
 - Ví dụ: `API_URL=http://192.168.1.100:3000`
