@@ -42,6 +42,10 @@ export const LoginScreen: React.FC<{ navigation: any }> = ({ navigation }) => {
       const { access_token, refresh_token, user } = response.data;
       
       if (access_token && refresh_token && user) {
+        if (user.role !== "checkin_staff") {
+          Alert.alert("Truy cập từ chối", "Chỉ nhân viên (staff) mới được phép đăng nhập vào ứng dụng này.");
+          return;
+        }
         await login(access_token, refresh_token, user);
         navigation.replace("CheckIn");
       } else {
