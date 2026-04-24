@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { getHomePathByRole, isWebSupportedRole } from "../../services/authSession";
 
 interface Props {
   children: React.ReactNode;
@@ -8,7 +9,13 @@ interface Props {
 }
 
 export const ProtectedRoute: React.FC<Props> = ({ children, roles }) => {
-  const { user, isLoading, isAuthenticated } = useAuth();
+  const { user, isLoading, isAuthenticated, logout } = useAuth();
+
+  useEffect(() => {
+    if (user && !isWebSupportedRole(user.role)) {
+      logout();
+    }
+  }, [user, logout]);
 
   if (isLoading)
     return (
@@ -17,10 +24,15 @@ export const ProtectedRoute: React.FC<Props> = ({ children, roles }) => {
       </div>
     );
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (!isAuthenticated || !user) return <Navigate to="/login" replace />;
 
-  if (roles && user && !roles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+  if (!isWebSupportedRole(user.role)) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (roles && !roles.includes(user.role)) {
+    const fallbackRoute = getHomePathByRole(user.role) || "/login";
+    return <Navigate to={fallbackRoute} replace />;
   }
 
   return <>{children}</>;

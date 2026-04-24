@@ -10,7 +10,9 @@ export const WorkshopListPage: React.FC = () => {
         <div className="flex items-center gap-4">
           <span className="text-gray-600">Xin chào, {user?.fullName}</span>
           <button
-            onClick={logout}
+            onClick={() => {
+              void logout();
+            }}
             className="text-red-500 hover:underline text-sm"
           >
             Đăng xuất

@@ -8,7 +8,9 @@ export const DashboardPage: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Admin Dashboard</h1>
         <button
-          onClick={logout}
+          onClick={() => {
+            void logout();
+          }}
           className="text-red-500 hover:underline text-sm"
         >
           Đăng xuất

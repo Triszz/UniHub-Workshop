@@ -5,6 +5,16 @@ export interface User {
   role: "student" | "organizer" | "checkin_staff";
 }
 
+export interface LoginResponse {
+  access_token: string;
+  refresh_token: string;
+  user: User;
+}
+
+export interface RefreshResponse {
+  access_token: string;
+}
+
 export interface AuthState {
   user: User | null;
   accessToken: string | null;
