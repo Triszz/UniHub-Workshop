@@ -43,7 +43,7 @@ export const syncOfflineCheckins = async (): Promise<SyncResult> => {
 
   // Tránh chạy đồng thời nhiều sync
   if (isSyncing) {
-    console.log("⏳ Sync already in progress, skipping.");
+    console.log("Sync already in progress, skipping.");
     return result;
   }
 
@@ -53,7 +53,7 @@ export const syncOfflineCheckins = async (): Promise<SyncResult> => {
     // 1. Kiểm tra kết nối mạng
     const network = await Network.getNetworkStateAsync();
     if (!network.isConnected || !network.isInternetReachable) {
-      console.log("📵 No network, sync skipped.");
+      console.log("No network, sync skipped.");
       return result;
     }
 
@@ -63,7 +63,7 @@ export const syncOfflineCheckins = async (): Promise<SyncResult> => {
       return result;
     }
 
-    console.log(`📡 Starting sync: ${unsynced.length} pending check-in(s)...`);
+    console.log(`Starting sync: ${unsynced.length} pending check-in(s)...`);
 
     // 3. Gửi theo batch
     for (let i = 0; i < unsynced.length; i += BATCH_SIZE) {
@@ -72,12 +72,12 @@ export const syncOfflineCheckins = async (): Promise<SyncResult> => {
     }
 
     console.log(
-      `✅ Sync complete — synced: ${result.synced}, ` +
+      `Sync complete — synced: ${result.synced}, ` +
         `skipped: ${result.skipped}, failed: ${result.failed}`,
     );
   } catch (err) {
     // Lỗi ngoài dự kiến (VD: SQLite unavailable) — không crash app
-    console.error("❌ Unexpected sync error:", err);
+    console.error("Unexpected sync error:", err);
   } finally {
     isSyncing = false;
   }
@@ -120,7 +120,7 @@ const syncBatchWithRetry = async (
 
     if (data.failed?.length) {
       result.errors.push(...data.failed);
-      console.warn("⚠️ Some check-ins failed on server:", data.failed);
+      console.warn("Some check-ins failed on server:", data.failed);
     }
   } catch (err: any) {
     const isNetworkError =
@@ -132,7 +132,7 @@ const syncBatchWithRetry = async (
     if (isNetworkError && retryIndex < RETRY_DELAYS_MS.length) {
       const delay = RETRY_DELAYS_MS[retryIndex];
       console.warn(
-        `🔄 Sync batch failed (attempt ${retryIndex + 1}), ` +
+        `Sync batch failed (attempt ${retryIndex + 1}), ` +
           `retrying in ${delay / 1000}s...`,
       );
       await sleep(delay);
@@ -148,10 +148,7 @@ const syncBatchWithRetry = async (
         reason: err.response?.data?.error ?? err.message ?? "Unknown error",
       })),
     );
-    console.error(
-      `❌ Batch sync failed permanently after retries:`,
-      err.message,
-    );
+    console.error(`Batch sync failed permanently after retries:`, err.message);
   }
 };
 
