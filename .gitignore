@@ -7,3 +7,4 @@ dist/
 *.log
 apps/api/prisma/*.db
 apps/mobile/sqlite.db
+blueprint

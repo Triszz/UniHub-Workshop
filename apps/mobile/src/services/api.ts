@@ -6,7 +6,7 @@ import * as SecureStore from "expo-secure-store";
 export const TOKEN_KEY = "access_token";
 export const REFRESH_TOKEN_KEY = "refresh_token";
 
-const API_BASE = process.env.API_URL ?? "http://192.168.1.100:3000/api/v1";
+const API_BASE = process.env.EXPO_PUBLIC_API_URL ?? "http://192.168.1.9:3000/api/v1";
 
 // ─── Axios instance ───────────────────────────────────────────────────────────
 
