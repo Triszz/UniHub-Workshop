@@ -1,12 +1,17 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import type { User } from "../types";
-import { api } from "../services/api";
+import { authService } from "../services/auth.service";
+import {
+  clearAuthSession,
+  persistAuthSession,
+  loadAuthSession,
+} from "../services/authSession";
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  login: (email: string, password: string) => Promise<User>;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -15,41 +20,56 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // 1. Sử dụng Lazy Initialization để đọc localStorage ngay lúc khởi tạo state
-  const [user, setUser] = useState<User | null>(() => {
-    const token = localStorage.getItem("access_token");
-    const savedUser = localStorage.getItem("user");
-    if (token && savedUser) {
-      try {
-        return JSON.parse(savedUser);
-      } catch (error) {
-        return null;
-      }
-    }
-    return null;
-  });
-
-  // 2. Vì đọc localStorage diễn ra tức thì, ta không cần trạng thái loading khởi tạo nữa
   const [isLoading, setIsLoading] = useState(false);
 
-  const login = async (email: string, password: string) => {
+  const [user, setUser] = useState<User | null>(() => {
+    const session = loadAuthSession();
+    if (!session) {
+      // Direct cleanup without invoking state mutator
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      localStorage.removeItem("user");
+      return null;
+    }
+    return session.user;
+  });
+
+  const handleClearSession = () => {
+    clearAuthSession();
+    setUser(null);
+  };
+
+  useEffect(() => {
+    const handleUnauthorized = () => handleClearSession();
+    window.addEventListener("auth:session-cleared", handleUnauthorized);
+    return () => {
+      window.removeEventListener("auth:session-cleared", handleUnauthorized);
+    };
+  }, []);
+
+  const login = async (email: string, password: string): Promise<User> => {
     setIsLoading(true);
     try {
-      const response = await api.post("/auth/login", { email, password });
-      const { access_token, user: userData } = response.data;
-
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("user", JSON.stringify(userData));
+      const { access_token, refresh_token, user: userData } = await authService.login(email, password);
+      persistAuthSession(access_token, refresh_token, userData);
       setUser(userData);
+      return userData;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user");
-    setUser(null);
+  const logout = async () => {
+    setIsLoading(true);
+    try {
+      const session = loadAuthSession();
+      if (session) {
+        await authService.logout();
+      }
+    } finally {
+      handleClearSession();
+      setIsLoading(false);
+    }
   };
 
   return (
