@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { initDatabase } from "./src/services/offlineSync/database";
 import { LoginScreen } from "./src/screens/LoginScreen";
 import { CheckInScreen } from "./src/screens/CheckIn/CheckInScreen";
+import { AuthProvider } from "./src/contexts/AuthContext";
 
 // Cài thêm navigation
 // npm install @react-navigation/native @react-navigation/native-stack
@@ -18,7 +19,8 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Login"
@@ -31,6 +33,7 @@ export default function App() {
           options={{ title: "Quét mã QR" }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+      </NavigationContainer>
+    </AuthProvider>
   );
 }
