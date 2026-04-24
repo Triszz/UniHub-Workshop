@@ -1,22 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { getHomePathByRole, isWebSupportedRole } from "../../services/authSession";
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (isWebSupportedRole(user.role)) {
+        navigate(getHomePathByRole(user.role), { replace: true });
+      } else {
+        logout();
+        setError("Tài khoản này chỉ dùng cho app check-in.");
+      }
+    }
+  }, [isAuthenticated, user, navigate, logout]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
     try {
-      await login(email, password);
-      navigate("/");
+      const loggedInUser = await login(email, password);
+      
+      if (isWebSupportedRole(loggedInUser.role)) {
+        navigate(getHomePathByRole(loggedInUser.role), { replace: true });
+      } else {
+        await logout();
+        setError("Tài khoản này chỉ dùng cho app check-in.");
+      }
     } catch (err: any) {
       setError(err.response?.data?.error || "Đăng nhập thất bại");
     } finally {
