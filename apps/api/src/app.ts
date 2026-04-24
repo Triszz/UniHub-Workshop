@@ -9,7 +9,8 @@ import { errorHandler } from "./shared/middleware/errorHandler";
 import { notFound } from "./shared/middleware/notFound";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || "0.0.0.0";
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 // ─── Global middleware ────────────────────────────────────────────────────────
 app.use(helmet());
@@ -29,7 +30,7 @@ app.use("/api/v1/auth", authRouter);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`API Server running on http://localhost:${PORT}`);
 });
 

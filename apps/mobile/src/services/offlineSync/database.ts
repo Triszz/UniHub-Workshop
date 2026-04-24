@@ -20,9 +20,9 @@ export const initDatabase = async (): Promise<void> => {
         created_at TEXT NOT NULL DEFAULT (datetime('now'))
       );
     `);
-    console.log("✅ SQLite: checkins table ready");
+    console.log("SQLite: checkins table ready");
   } catch (error) {
-    console.error("❌ SQLite init error:", error);
+    console.error("SQLite init error:", error);
     throw error; // Ném lỗi ra ngoài để component cha xử lý nếu cần
   }
 };
