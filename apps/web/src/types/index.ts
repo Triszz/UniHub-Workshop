@@ -21,17 +21,55 @@ export interface AuthState {
   isLoading: boolean;
 }
 
+export type WorkshopStatus = "draft" | "published" | "cancelled";
+
+export interface Room {
+  id: string;
+  name: string;
+  building?: string;
+  capacity?: number;
+}
+
 export interface Workshop {
   id: string;
   title: string;
   description?: string;
   speakerName?: string;
+  speakerBio?: string;
   capacity: number;
   registeredCount: number;
   startsAt: string;
   endsAt: string;
   price: number;
-  status: string;
+  status: WorkshopStatus;
   aiSummary?: string;
-  room?: { name: string; building?: string };
+  room: Room;
+}
+
+export interface WorkshopFormData {
+  title: string;
+  description?: string;
+  speakerName?: string;
+  speakerBio?: string;
+  roomId: string;
+  capacity: number;
+  startsAt: string;
+  endsAt: string;
+  price: number;
+  status: "draft" | "published";
+}
+
+export interface WorkshopListResponse {
+  workshops: Workshop[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface CancelWorkshopResponse {
+  cancelled: boolean;
+  affectedRegistrations: number;
 }

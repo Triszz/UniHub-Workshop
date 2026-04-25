@@ -5,7 +5,7 @@ import { ProtectedRoute } from "./components/common/ProtectedRoute";
 // Pages
 import { LoginPage } from "./pages/auth/LoginPage";
 import { WorkshopListPage } from "./pages/student/WorkshopListPage";
-import { DashboardPage } from "./pages/admin/DashboardPage";
+import { WorkshopAdminPage } from "./pages/admin/WorkshopAdminPage";
 
 function App() {
   return (
@@ -30,7 +30,15 @@ function App() {
             path="/admin"
             element={
               <ProtectedRoute roles={["organizer"]}>
-                <DashboardPage />
+                <Navigate to="/admin/workshops" replace />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/workshops"
+            element={
+              <ProtectedRoute roles={["organizer"]}>
+                <WorkshopAdminPage />
               </ProtectedRoute>
             }
           />
