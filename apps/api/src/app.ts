@@ -5,6 +5,10 @@ import helmet from "helmet";
 
 import { healthRouter } from "./modules/health/health.routes";
 import { authRouter } from "./modules/auth/auth.routes";
+import {
+  workshopPublicRouter,
+  workshopAdminRouter,
+} from "./modules/workshop/workshop.routes";
 import { errorHandler } from "./shared/middleware/errorHandler";
 import { notFound } from "./shared/middleware/notFound";
 
@@ -25,6 +29,8 @@ app.use(express.json());
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use("/api/v1", healthRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/workshops", workshopPublicRouter);
+app.use("/api/v1/admin/workshops", workshopAdminRouter);
 
 // ─── Error handling ─────────────────────────────────────
 app.use(notFound);
