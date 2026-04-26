@@ -73,3 +73,40 @@ export interface CancelWorkshopResponse {
   cancelled: boolean;
   affectedRegistrations: number;
 }
+
+/* ─── Registration ─── */
+
+export type RegistrationStatus = "confirmed" | "pending" | "cancelled" | "checked_in";
+
+/** Room info returned by registration endpoints (no `id` field). */
+export interface RegistrationRoomSummary {
+  name?: string;
+  building?: string;
+}
+
+export interface RegistrationWorkshopSummary {
+  id: string;
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  price?: number;
+  capacity?: number;
+  registeredCount?: number;
+  room?: RegistrationRoomSummary;
+}
+
+export interface Registration {
+  id: string;
+  status: RegistrationStatus;
+  qrCode?: string;
+  createdAt: string;
+  workshop?: RegistrationWorkshopSummary;
+}
+
+export interface RegistrationResponse {
+  registration: Registration;
+}
+
+export interface RegistrationListResponse {
+  registrations: Registration[];
+}
