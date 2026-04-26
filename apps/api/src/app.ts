@@ -9,6 +9,7 @@ import {
   workshopPublicRouter,
   workshopAdminRouter,
 } from "./modules/workshop/workshop.routes";
+import { registrationRouter } from "./modules/registration/registration.routes";
 import { errorHandler } from "./shared/middleware/errorHandler";
 import { notFound } from "./shared/middleware/notFound";
 import { setupCsvImportCron } from "./workers/csv-import.worker";
@@ -37,6 +38,7 @@ app.use("/api/v1/workshops", workshopPublicRouter);
 app.use("/api/v1/admin/workshops", workshopAdminRouter);
 app.use("/api/v1/admin/csv-imports", csvImportAdminRouter);
 app.use("/api/v1/notifications", notificationRouter);
+app.use("/api/v1/registrations", registrationRouter);
 
 // ─── Error handling ─────────────────────────────────────
 app.use(notFound);
