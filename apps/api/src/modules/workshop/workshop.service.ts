@@ -5,6 +5,7 @@ import {
   UpdateWorkshopDto,
   WorkshopListQuery,
 } from "./workshop.types";
+import { notificationQueue } from "../../workers/notification.worker";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -45,6 +46,7 @@ const publicWorkshopSelect = {
 const adminWorkshopSelect = {
   ...publicWorkshopSelect,
   createdBy: true,
+  isReminderSent: true,
   updatedAt: true,
 } satisfies Prisma.WorkshopSelect;
 
@@ -292,23 +294,47 @@ export const updateWorkshop = async (id: string, dto: UpdateWorkshopDto) => {
   if (startsAt !== undefined) updateData.startsAt = startsAt;
   if (endsAt !== undefined) updateData.endsAt = endsAt;
 
+  // Nếu thời gian thay đổi, reset isReminderSent để Cron job quét lại
+  const timeChanged =
+    (dto.startsAt || dto.endsAt) &&
+    (startsAt?.getTime() !== existing.startsAt.getTime() ||
+      endsAt?.getTime() !== existing.endsAt.getTime());
+
+  if (timeChanged) {
+    updateData.isReminderSent = false;
+  }
+
   const updated = await prisma.workshop.update({
     where: { id },
     data: updateData,
     select: adminWorkshopSelect,
   });
 
-  // TODO Ngày 9: nếu đổi phòng/giờ và đã published → enqueue NotificationJob
+  // Gửi Notification nếu đổi phòng/giờ và đã published
   const roomChanged = dto.roomId && dto.roomId !== existing.roomId?.toString();
-  const timeChanged =
-    (dto.startsAt || dto.endsAt) &&
-    (startsAt?.getTime() !== existing.startsAt.getTime() ||
-      endsAt?.getTime() !== existing.endsAt.getTime());
 
   if (existing.status === "published" && (roomChanged || timeChanged)) {
-    console.log(
-      `[TODO] Enqueue workshop_updated notification for workshop ${id}`,
-    );
+    const registrations = await prisma.registration.findMany({
+      where: { workshopId: id, status: "confirmed" },
+      select: { userId: true },
+    });
+
+    if (registrations.length > 0) {
+      const jobs = registrations.map((reg) => ({
+        name: "send-notification",
+        data: {
+          type: "workshop_updated",
+          userId: reg.userId,
+          payload: {
+            workshopTitle: updated.title,
+            startsAt: updated.startsAt.toLocaleString("vi-VN"),
+            roomName: updated.room?.name || "Đang cập nhật",
+          },
+        },
+        opts: { attempts: 3, backoff: { type: "exponential", delay: 60000 }, removeOnComplete: true },
+      }));
+      await notificationQueue.addBulk(jobs);
+    }
   }
 
   return updated;
@@ -361,11 +387,26 @@ export const cancelWorkshop = async (id: string) => {
     return { workshop: cancelled, affectedRegistrations: affectedCount };
   });
 
-  // TODO Ngày 9: enqueue NotificationJob (workshop_cancelled) + RefundJob
+  // Bắn Notification cho các user bị hủy (những người có registration pending hoặc confirmed)
   if (result.affectedRegistrations > 0) {
-    console.log(
-      `[TODO] Enqueue workshop_cancelled notifications for ${result.affectedRegistrations} registrations of workshop ${id}`,
-    );
+    const registrations = await prisma.registration.findMany({
+      where: { workshopId: id, status: "cancelled" }, // Vì đã updateMany ở trên nên lấy cancelled
+      select: { userId: true },
+    });
+
+    const jobs = registrations.map((reg) => ({
+      name: "send-notification",
+      data: {
+        type: "workshop_cancelled",
+        userId: reg.userId,
+        payload: {
+          workshopTitle: existing.title,
+        },
+      },
+      opts: { attempts: 3, backoff: { type: "exponential", delay: 60000 }, removeOnComplete: true },
+    }));
+
+    await notificationQueue.addBulk(jobs);
   }
 
   return result;
