@@ -1,10 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/common/ProtectedRoute";
+import { StudentLayout } from "./components/student/StudentLayout";
 
 // Pages
 import { LoginPage } from "./pages/auth/LoginPage";
 import { WorkshopListPage } from "./pages/student/WorkshopListPage";
+import { WorkshopDetailPage } from "./pages/student/WorkshopDetailPage";
+import { MyRegistrationsPage } from "./pages/student/MyRegistrationsPage";
 import { WorkshopAdminPage } from "./pages/admin/WorkshopAdminPage";
 
 function App() {
@@ -17,13 +20,17 @@ function App() {
 
           {/* Student routes */}
           <Route
-            path="/"
             element={
               <ProtectedRoute roles={["student"]}>
-                <WorkshopListPage />
+                <StudentLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="/" element={<Navigate to="/workshops" replace />} />
+            <Route path="/workshops" element={<WorkshopListPage />} />
+            <Route path="/workshops/:id" element={<WorkshopDetailPage />} />
+            <Route path="/my-registrations" element={<MyRegistrationsPage />} />
+          </Route>
 
           {/* Admin routes */}
           <Route
