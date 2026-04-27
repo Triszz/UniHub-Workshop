@@ -16,7 +16,7 @@ export const createRegistrationHandler = async (
       return;
     }
 
-    const result = await RegistrationService.registerFree(
+    const result = await RegistrationService.register(
       req.user!.id,
       workshopId,
     );

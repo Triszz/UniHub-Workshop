@@ -105,6 +105,12 @@ export interface Registration {
 
 export interface RegistrationResponse {
   registration: Registration;
+  checkoutUrl?: string;
+  payment?: {
+    id: string;
+    amount: number;
+    idempotency_key?: string;
+  };
 }
 
 export interface RegistrationListResponse {
