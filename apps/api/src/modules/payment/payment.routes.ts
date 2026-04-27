@@ -1,12 +1,44 @@
 import { Router } from "express";
 import { verifyJWT, requireRole } from "../../shared/middleware/auth";
-import { processPaymentHandler } from "./payment.controller";
+import {
+  processPaymentHandler,
+  getPaymentStatusHandler,
+  getCircuitBreakerHandler,
+  resetCircuitBreakerHandler,
+} from "./payment.controller";
 
-const router = Router();
+export const paymentRouter = Router();
 
-router.use(verifyJWT);
+// Tất cả đều yêu cầu xác thực
+paymentRouter.use(verifyJWT);
 
-// Mock payment: POST /api/v1/payments/:registrationId
-router.post("/:registrationId", requireRole("student"), processPaymentHandler);
+/**
+ * POST /api/v1/payments/:registrationId
+ * Header bắt buộc: Idempotency-Key: <uuid-v4>
+ * Chỉ student của registration đó mới được thanh toán
+ */
+paymentRouter.post(
+  "/:registrationId",
+  requireRole("student"),
+  processPaymentHandler,
+);
 
-export default router;
+/**
+ * GET /api/v1/payments/:registrationId/status
+ * Kiểm tra trạng thái thanh toán (dùng để polling từ frontend)
+ */
+paymentRouter.get(
+  "/:registrationId/status",
+  requireRole("student"),
+  getPaymentStatusHandler,
+);
+
+/**
+ * GET /api/v1/admin/circuit-breaker
+ * Xem trạng thái circuit breaker hiện tại
+ */
+export const circuitBreakerAdminRouter = Router();
+circuitBreakerAdminRouter.use(verifyJWT, requireRole("organizer"));
+
+circuitBreakerAdminRouter.get("/", getCircuitBreakerHandler);
+circuitBreakerAdminRouter.post("/reset", resetCircuitBreakerHandler);
