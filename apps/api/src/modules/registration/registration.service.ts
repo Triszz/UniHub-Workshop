@@ -2,20 +2,20 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../../shared/database/prisma";
 import { QrPayload } from "./registration.types";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const appError = (message: string, status: number) =>
   Object.assign(new Error(message), { status });
 
 /**
- * Sinh QR code: JWT signed chứa registrationId, workshopId, userId.
- * Hết hạn 2 tiếng sau khi workshop bắt đầu.
+ * Sinh QR code: JWT signed chá»©a registrationId, workshopId, userId.
+ * Háº¿t háº¡n 2 tiáº¿ng sau khi workshop báº¯t Ä‘áº§u.
  */
-const generateQrCode = (
+export const generateQrCode = (
   registrationId: string,
   workshopId: string,
   userId: string,
@@ -34,10 +34,10 @@ const generateQrCode = (
   return jwt.sign(payload, JWT_SECRET);
 };
 
-// ─── Service: POST /registrations ────────────────────────────────────────────
+// â”€â”€â”€ Service: POST /registrations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-export const registerFree = async (userId: string, workshopId: string) => {
-  // ── Bước 1: Validate workshop ───────────────────────────────────────────────
+export const register = async (userId: string, workshopId: string) => {
+  // â”€â”€ BÆ°á»›c 1: Validate workshop â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const workshop = await prisma.workshop.findUnique({
     where: { id: workshopId },
     select: {
@@ -54,46 +54,39 @@ export const registerFree = async (userId: string, workshopId: string) => {
   });
 
   if (!workshop || workshop.status !== "published") {
-    throw appError("Workshop không tồn tại.", 404);
+    throw appError("Workshop khĂ´ng tá»“n táº¡i.", 404);
   }
 
   if (workshop.endsAt < new Date()) {
-    throw appError("Workshop đã kết thúc, không thể đăng ký.", 400);
+    throw appError("Workshop Ä‘Ă£ káº¿t thĂºc, khĂ´ng thá»ƒ Ä‘Äƒng kĂ½.", 400);
   }
 
-  if (Number(workshop.price) > 0) {
-    throw appError(
-      "Workshop này có phí. Vui lòng sử dụng luồng thanh toán.",
-      400,
-    );
-  }
-
-  // ── Bước 2: Kiểm tra đã đăng ký chưa ──────────────────────────────────────
+  // â”€â”€ BÆ°á»›c 2: Kiá»ƒm tra Ä‘Ă£ Ä‘Äƒng kĂ½ chÆ°a â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const existingReg = await prisma.registration.findUnique({
     where: { userId_workshopId: { userId, workshopId } },
   });
 
   if (existingReg && existingReg.status !== "cancelled") {
-    throw appError("Bạn đã đăng ký workshop này rồi.", 409);
+    throw appError("Báº¡n Ä‘Ă£ Ä‘Äƒng kĂ½ workshop nĂ y rá»“i.", 409);
   }
 
-  // ── Bước 3: DB Transaction với SELECT FOR UPDATE ──────────────────────────
+  // â”€â”€ BÆ°á»›c 3: DB Transaction vá»›i SELECT FOR UPDATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   //
-  // KHÔNG dùng Redis distributed lock vì:
-  //   - Lock chỉ cho 1 request qua tại một thời điểm → bottleneck nghiêm trọng
-  //   - SELECT FOR UPDATE đã đủ để chống race condition ở tầng DB
+  // KHĂ”NG dĂ¹ng Redis distributed lock vĂ¬:
+  //   - Lock chá»‰ cho 1 request qua táº¡i má»™t thá»i Ä‘iá»ƒm â†’ bottleneck nghiĂªm trá»ng
+  //   - SELECT FOR UPDATE Ä‘Ă£ Ä‘á»§ Ä‘á»ƒ chá»‘ng race condition á»Ÿ táº§ng DB
   //
-  // Cách PostgreSQL xử lý 100 concurrent requests:
-  //   - Tất cả vào transaction, nhưng chỉ 1 transaction hold row lock tại một thời điểm
-  //   - Các transaction khác WAIT (không bị từ chối) cho đến khi lock được release
-  //   - Mỗi transaction sau khi có lock sẽ đọc registeredCount MỚI NHẤT
-  //   - Transaction thứ 61 trở đi thấy registeredCount = 60 = capacity → throw 409
+  // CĂ¡ch PostgreSQL xá»­ lĂ½ 100 concurrent requests:
+  //   - Táº¥t cáº£ vĂ o transaction, nhÆ°ng chá»‰ 1 transaction hold row lock táº¡i má»™t thá»i Ä‘iá»ƒm
+  //   - CĂ¡c transaction khĂ¡c WAIT (khĂ´ng bá»‹ tá»« chá»‘i) cho Ä‘áº¿n khi lock Ä‘Æ°á»£c release
+  //   - Má»—i transaction sau khi cĂ³ lock sáº½ Ä‘á»c registeredCount Má»I NHáº¤T
+  //   - Transaction thá»© 61 trá»Ÿ Ä‘i tháº¥y registeredCount = 60 = capacity â†’ throw 409
   //
-  // Kết quả: đúng 60 thành công, 40 nhận 409 "Hết chỗ" — không có double-booking
+  // Káº¿t quáº£: Ä‘Ăºng 60 thĂ nh cĂ´ng, 40 nháº­n 409 "Háº¿t chá»—" â€” khĂ´ng cĂ³ double-booking
   //
   const registration = await prisma.$transaction(
     async (tx) => {
-      // SELECT FOR UPDATE: lock row workshop, đọc giá trị HIỆN TẠI (không bị stale read)
+      // SELECT FOR UPDATE: lock row workshop, Ä‘á»c giĂ¡ trá»‹ HIá»†N Táº I (khĂ´ng bá»‹ stale read)
       const rows = await tx.$queryRaw<
         Array<{ id: string; registered_count: number; capacity: number }>
       >`
@@ -103,77 +96,113 @@ export const registerFree = async (userId: string, workshopId: string) => {
         FOR UPDATE
       `;
 
-      if (rows.length === 0) throw appError("Workshop không tồn tại.", 404);
+      if (rows.length === 0) throw appError("Workshop khĂ´ng tá»“n táº¡i.", 404);
 
       const { registered_count, capacity } = rows[0];
 
-      // Guard cuối cùng — đọc sau khi có lock nên luôn chính xác
+      // Guard cuá»‘i cĂ¹ng â€” Ä‘á»c sau khi cĂ³ lock nĂªn luĂ´n chĂ­nh xĂ¡c
       if (registered_count >= capacity) {
-        throw appError("Workshop đã hết chỗ.", 409);
+        throw appError("Workshop Ä‘Ă£ háº¿t chá»—.", 409);
       }
+
+      const isFree = Number(workshop.price) === 0;
+      const initialStatus = isFree ? "confirmed" : "pending";
 
       // Upsert registration
       let reg;
       if (existingReg?.status === "cancelled") {
         reg = await tx.registration.update({
           where: { id: existingReg.id },
-          data: { status: "confirmed", qrCode: null },
+          data: { status: initialStatus, qrCode: null },
         });
       } else {
         reg = await tx.registration.create({
-          data: { userId, workshopId, status: "confirmed" },
+          data: { userId, workshopId, status: initialStatus },
         });
       }
 
-      // Tăng registeredCount trong cùng transaction — atomic
+      // TÄƒng registeredCount trong cĂ¹ng transaction â€” atomic
       await tx.workshop.update({
         where: { id: workshopId },
         data: { registeredCount: { increment: 1 } },
       });
 
-      return reg;
+      // Náº¿u cĂ³ phĂ­, táº¡o transaction pending payment (hoáº·c reset náº¿u cĂ³ cÅ©)
+      let paymentRecord = null;
+      if (!isFree) {
+        // TĂ¡i táº¡o hoáº·c táº¡o má»›i Payment
+        if (existingReg?.paymentId) {
+          paymentRecord = await tx.payment.update({
+            where: { id: existingReg.paymentId },
+            data: { status: "pending", idempotencyKey: `pay_${Date.now()}_${userId}` }, // Táº¡m gen 1 idempotency key má»›i náº¿u retry session
+          });
+        } else {
+          paymentRecord = await tx.payment.create({
+            data: {
+              amount: workshop.price,
+              status: "pending",
+              idempotencyKey: `pay_${Date.now()}_${userId}`,
+            },
+          });
+          // Gáº¯n paymentId vĂ o registration
+          await tx.registration.update({
+            where: { id: reg.id },
+            data: { paymentId: paymentRecord.id },
+          });
+        }
+      }
+
+      return { reg, isFree, paymentRecord };
     },
     {
-      // Timeout transaction: 10 giây
-      // Khi 100 requests xếp hàng chờ lock, request cuối cùng có thể chờ lâu
+      // Timeout transaction: 10 giĂ¢y
+      // Khi 100 requests xáº¿p hĂ ng chá» lock, request cuá»‘i cĂ¹ng cĂ³ thá»ƒ chá» lĂ¢u
       timeout: 10_000,
     },
   );
 
-  // ── Bước 4: Sinh QR code (ngoài transaction) ───────────────────────────────
-  const qrCode = generateQrCode(
-    registration.id,
-    workshopId,
-    userId,
-    workshop.startsAt,
-  );
+  if (registration.isFree) {
+    // â”€â”€ BÆ°á»›c 4: Sinh QR code (ngoĂ i transaction, chá»‰ cho free workshop) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    const qrCode = generateQrCode(
+      registration.reg.id,
+      workshopId,
+      userId,
+      workshop.startsAt,
+    );
 
-  const updatedReg = await prisma.registration.update({
-    where: { id: registration.id },
-    data: { qrCode },
-    select: { id: true, status: true, qrCode: true, createdAt: true },
-  });
+    const updatedReg = await prisma.registration.update({
+      where: { id: registration.reg.id },
+      data: { qrCode },
+      select: { id: true, status: true, qrCode: true, createdAt: true },
+    });
 
-  // ── Bước 5: Enqueue notification (TODO Ngày 9) ────────────────────────────
-  console.log(
-    `[TODO] Enqueue notification: registration_confirmed — user ${userId}, workshop ${workshopId}`,
-  );
+    // â”€â”€ BÆ°á»›c 5: Enqueue notification (TODO NgĂ y 9) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    console.log(
+      `[TODO] Enqueue notification: registration_confirmed â€” user ${userId}, workshop ${workshopId}`,
+    );
 
-  return {
-    registration: {
-      ...updatedReg,
-      workshop: {
-        id: workshop.id,
-        title: workshop.title,
-        startsAt: workshop.startsAt,
-        endsAt: workshop.endsAt,
-        room: workshop.room,
+    return {
+      registration: {
+        ...updatedReg,
+        workshop: { ...workshop },
       },
-    },
-  };
+    };
+  } else {
+    // Luá»“ng cĂ³ phĂ­: tráº£ vá» checkoutUrl
+    return {
+      registration: {
+        id: registration.reg.id,
+        status: registration.reg.status,
+        createdAt: registration.reg.createdAt,
+        workshop: { ...workshop },
+        payment: registration.paymentRecord,
+      },
+      checkoutUrl: `/checkout/${registration.reg.id}`,
+    };
+  }
 };
 
-// ─── Service: GET /registrations/me ──────────────────────────────────────────
+// â”€â”€â”€ Service: GET /registrations/me â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const getMyRegistrations = async (userId: string) => {
   const registrations = await prisma.registration.findMany({
@@ -205,7 +234,7 @@ export const getMyRegistrations = async (userId: string) => {
   return { registrations };
 };
 
-// ─── Service: GET /registrations/me/:id ──────────────────────────────────────
+// â”€â”€â”€ Service: GET /registrations/me/:id â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const getMyRegistrationById = async (
   userId: string,
@@ -241,12 +270,12 @@ export const getMyRegistrationById = async (
     },
   });
 
-  if (!registration) throw appError("Không tìm thấy đăng ký.", 404);
+  if (!registration) throw appError("KhĂ´ng tĂ¬m tháº¥y Ä‘Äƒng kĂ½.", 404);
 
   return { registration };
 };
 
-// ─── Service: DELETE /registrations/:id ──────────────────────────────────────
+// â”€â”€â”€ Service: DELETE /registrations/:id â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const cancelRegistration = async (
   userId: string,
@@ -257,13 +286,13 @@ export const cancelRegistration = async (
     include: { workshop: true },
   });
 
-  if (!registration) throw appError("Không tìm thấy đăng ký.", 404);
+  if (!registration) throw appError("KhĂ´ng tĂ¬m tháº¥y Ä‘Äƒng kĂ½.", 404);
   if (registration.status === "cancelled")
-    throw appError("Đăng ký đã được hủy trước đó.", 400);
+    throw appError("ÄÄƒng kĂ½ Ä‘Ă£ Ä‘Æ°á»£c há»§y trÆ°á»›c Ä‘Ă³.", 400);
   if (registration.status === "checked_in")
-    throw appError("Không thể hủy sau khi đã check-in.", 400);
+    throw appError("KhĂ´ng thá»ƒ há»§y sau khi Ä‘Ă£ check-in.", 400);
   if (registration.workshop.startsAt <= new Date())
-    throw appError("Không thể hủy sau khi workshop đã bắt đầu.", 400);
+    throw appError("KhĂ´ng thá»ƒ há»§y sau khi workshop Ä‘Ă£ báº¯t Ä‘áº§u.", 400);
 
   await prisma.$transaction([
     prisma.registration.update({

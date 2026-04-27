@@ -1,21 +1,22 @@
-import { execSync } from 'child_process';
-import { writeFileSync } from 'fs';
+import { ESLint } from "eslint";
 
-// Lint student pages
-try {
-  execSync('npx eslint src/pages/student/ --format json', { encoding: 'utf8' });
-  console.log('STUDENT LINT: ALL CLEAN');
-} catch (e) {
-  const data = JSON.parse(e.stdout);
-  let hasErrors = false;
-  for (const file of data) {
-    if (file.messages.length === 0) continue;
-    hasErrors = true;
-    const name = file.filePath.replace(/\\/g, '/').split('/').pop();
-    console.log(`FILE: ${name}`);
-    for (const m of file.messages) {
-      console.log(`  L${m.line} [${m.ruleId}] ${m.message.substring(0, 80)}`);
+(async function main() {
+  const eslint = new ESLint();
+  const results = await eslint.lintFiles(["src/pages/student/CheckoutPage.tsx", "src/pages/student/WorkshopDetailPage.tsx", "src/services/payment.service.ts", "src/services/registration.service.ts"]);
+  let hasError = false;
+  results.forEach((result) => {
+    if (result.errorCount > 0 || result.warningCount > 0) {
+      hasError = true;
+      console.log(result.filePath);
+      result.messages.forEach((msg) => {
+        console.log(`  Line ${msg.line}: ${msg.message} (${msg.ruleId})`);
+      });
     }
+  });
+  if (!hasError) {
+    console.log("No lint errors found in the updated files.");
   }
-  if (!hasErrors) console.log('STUDENT LINT: ALL CLEAN');
-}
+})().catch((error) => {
+  process.exitCode = 1;
+  console.error(error);
+});

@@ -19,15 +19,22 @@ const normalizeRegistration = (reg: Registration): Registration => {
   };
 };
 
+const normalizeRegistrationResponse = (res: RegistrationResponse): RegistrationResponse => {
+  return {
+    ...res,
+    registration: normalizeRegistration(res.registration),
+  };
+};
+
 export const registrationService = {
   /**
-   * Register for a free workshop
+   * Register for a workshop (free or paid)
    */
-  register: async (workshopId: string): Promise<Registration> => {
+  register: async (workshopId: string): Promise<RegistrationResponse> => {
     const response = await api.post<RegistrationResponse>("/registrations", {
       workshopId,
     });
-    return normalizeRegistration(response.data.registration);
+    return normalizeRegistrationResponse(response.data);
   },
 
   /**
