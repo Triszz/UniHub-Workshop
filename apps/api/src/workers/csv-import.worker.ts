@@ -2,6 +2,7 @@ import { Queue, Worker } from "bullmq";
 import fs from "fs";
 import path from "path";
 import readline from "readline";
+import bcrypt from "bcrypt";
 import { redis } from "../shared/redis/client";
 import { PrismaClient } from "@prisma/client";
 
@@ -32,10 +33,10 @@ export const setupCsvImportCron = async () => {
 export const csvImportWorker = new Worker(
   QUEUE_NAME,
   async (job) => {
-    console.log(`[CsvImportWorker] Processing job ${job.id}`);
+    console.log(`[CsvImportWorker] Bắt đầu xử lý job ${job.id}`);
 
-    const filePath = "/data/students.csv";
-    const localFilePath = path.join(process.cwd(), "data", "students.csv");
+    const filePath = job.data?.filePath || "/data/students.csv";
+    const localFilePath = path.join(process.cwd(), filePath.startsWith('/') ? filePath.substring(1) : filePath);
     const targetFile = fs.existsSync(filePath) ? filePath : localFilePath;
 
     const log = await prisma.csvImportLog.create({
@@ -47,154 +48,160 @@ export const csvImportWorker = new Worker(
     });
 
     if (!fs.existsSync(targetFile)) {
+      // console.log(`[CsvImportWorker] Không tìm thấy file: ${targetFile}`);
       await prisma.csvImportLog.update({
         where: { id: log.id },
-        data: {
-          status: "failed",
-          errors: { message: "File not found" },
-          completedAt: new Date(),
-        },
+        data: { status: "failed", errors: { message: "File not found" }, completedAt: new Date() },
       });
-      console.log(`[CsvImportWorker] File not found`);
       return;
     }
-
-    const fileStream = fs.createReadStream(targetFile);
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity,
-    });
-
-    let isFirstLine = true;
-    let headers: string[] = [];
-    const expectedHeaders = ["student_id", "full_name", "email", "faculty", "year"];
-
-    let totalRows = 0;
-    let importedRows = 0;
-    let skippedRows = 0;
-    let errorRows = 0;
-    const errors: any[] = [];
-
-    for await (const line of rl) {
-      if (!line.trim()) continue;
-
-      if (isFirstLine) {
-        headers = line.split(",").map((h) => h.trim().toLowerCase());
-        isFirstLine = false;
-
-        // Check columns in order
-        let headerOrderValid = true;
-        for (let i = 0; i < expectedHeaders.length; i++) {
-          if (headers[i] !== expectedHeaders[i]) {
-            headerOrderValid = false;
-            break;
-          }
-        }
-
-        if (!headerOrderValid) {
-          await prisma.csvImportLog.update({
-            where: { id: log.id },
-            data: {
-              status: "failed",
-              errors: { message: `Invalid headers or order. Expected: ${expectedHeaders.join(", ")}` },
-              completedAt: new Date(),
-            },
-          });
-          return;
-        }
-        continue;
-      }
-
-      totalRows++;
-      const values = line.split(",").map((v) => v.trim());
-      const rowObj: any = {};
-      headers.forEach((h, i) => {
-        rowObj[h] = values[i] || "";
+    // console.log(`[CsvImportWorker] Đang tạo Hash Password mặc định...`);
+    const defaultPasswordHash = await bcrypt.hash("Password123!", 12);
+    console.log(`[CsvImportWorker] Tạo Hash thành công! Bắt đầu đọc file...`);
+    // BỌC TRY...CATCH TOÀN CỤC Ở ĐÂY ĐỂ BẮT LỖI CRASH NGẦM
+    try {
+      const fileStream = fs.createReadStream(targetFile);
+      const rl = readline.createInterface({
+        input: fileStream,
+        crlfDelay: Infinity,
       });
 
-      // Validations
-      const errorsForRow: string[] = [];
-      if (!/^SV\d{8}$/.test(rowObj.student_id)) {
-        errorsForRow.push("Invalid student_id");
-      }
-      if (!rowObj.email || !rowObj.email.endsWith("@university.edu.vn")) {
-        errorsForRow.push("Invalid email format/domain");
-      }
-      if (!rowObj.full_name || rowObj.full_name.length > 255) {
-        errorsForRow.push("Invalid full_name");
-      }
-      const yearNum = parseInt(rowObj.year);
-      if (isNaN(yearNum) || yearNum < 1 || yearNum > 6) {
-        errorsForRow.push("Invalid year");
-      }
+      let isFirstLine = true;
+      let headers: string[] = [];
+      const expectedHeaders = ["student_id", "full_name", "email", "faculty", "year"];
 
-      if (errorsForRow.length > 0) {
-        errors.push({ row: totalRows, message: errorsForRow.join(", "), data: rowObj });
-        errorRows++;
-        continue;
-      }
+      let totalRows = 0;
+      let importedRows = 0;
+      let skippedRows = 0;
+      let errorRows = 0;
+      const errors: any[] = [];
 
-      try {
-        const existingByEmail = await prisma.user.findUnique({
-          where: { email: rowObj.email },
-        });
+      for await (const line of rl) {
+        if (!line.trim()) continue;
 
-        if (existingByEmail && existingByEmail.studentId !== rowObj.student_id) {
-          errors.push({
-            row: totalRows,
-            message: "Email conflict with another student",
-          });
-          skippedRows++;
+        if (isFirstLine) {
+          headers = line.split(",").map((h) => h.trim().toLowerCase());
+          isFirstLine = false;
+
+          let headerOrderValid = true;
+          for (let i = 0; i < expectedHeaders.length; i++) {
+            if (headers[i] !== expectedHeaders[i]) {
+              headerOrderValid = false;
+              break;
+            }
+          }
+
+          if (!headerOrderValid) {
+            console.log(`[CsvImportWorker] ❌ Sai cấu trúc Header!`);
+            await prisma.csvImportLog.update({
+              where: { id: log.id },
+              data: {
+                status: "failed",
+                errors: { message: `Invalid headers. Expected: ${expectedHeaders.join(", ")}` },
+                completedAt: new Date(),
+              },
+            });
+            return;
+          }
           continue;
         }
 
-        const existingByStudentId = await prisma.user.findUnique({
-          where: { studentId: rowObj.student_id },
+        totalRows++;
+        // console.log(`[CsvImportWorker] Đang xử lý dòng ${totalRows}...`);
+
+        // Tạm thời dùng split cơ bản thay vì Regex để tránh lỗi lặp vô hạn (catastrophic backtracking)
+        const values = line.split(",").map((v) => v.trim());
+        const rowObj: any = {};
+        headers.forEach((h, i) => {
+          rowObj[h] = values[i] || "";
         });
 
-        if (existingByStudentId) {
-          await prisma.user.update({
+        // Validations
+        const errorsForRow: string[] = [];
+        if (!/^SV\d{8}$/.test(rowObj.student_id)) errorsForRow.push("Invalid student_id");
+        if (!rowObj.email || !rowObj.email.endsWith("@university.edu.vn")) errorsForRow.push("Invalid email");
+        if (!rowObj.full_name) errorsForRow.push("Invalid full_name");
+
+        const yearNum = parseInt(rowObj.year);
+        if (isNaN(yearNum) || yearNum < 1 || yearNum > 6) errorsForRow.push("Invalid year");
+
+        if (errorsForRow.length > 0) {
+          // console.log(`[CsvImportWorker] Dòng ${totalRows} dính lỗi validate:`, errorsForRow);
+          errors.push({ row: totalRows, student_id: rowObj.student_id, message: errorsForRow.join(", ") });
+          errorRows++;
+          continue;
+        }
+
+        try {
+          // console.log(`[CsvImportWorker] Đang lưu dòng ${totalRows} (student: ${rowObj.student_id}) vào DB...`);
+
+          const existingByEmail = await prisma.user.findUnique({
+            where: { email: rowObj.email },
+            select: { studentId: true }
+          });
+
+          if (existingByEmail && existingByEmail.studentId !== rowObj.student_id) {
+            errors.push({ row: totalRows, student_id: rowObj.student_id, message: "Email conflict" });
+            errorRows++;
+            continue;
+          }
+
+          await prisma.user.upsert({
             where: { studentId: rowObj.student_id },
-            data: {
+            update: {
               fullName: rowObj.full_name,
               faculty: rowObj.faculty,
               year: yearNum,
             },
-          });
-        } else {
-          await prisma.user.create({
-            data: {
+            create: {
               studentId: rowObj.student_id,
               email: rowObj.email,
               fullName: rowObj.full_name,
               faculty: rowObj.faculty,
               year: yearNum,
               role: "student",
+              passwordHash: defaultPasswordHash,
             },
           });
+          importedRows++;
+        } catch (dbErr: any) {
+          // console.log(`[CsvImportWorker] Lỗi DB tại dòng ${totalRows}: ${dbErr.message}`);
+          errors.push({ row: totalRows, message: dbErr.message });
+          errorRows++;
         }
-
-        importedRows++;
-      } catch (dbErr: any) {
-        errors.push({ row: totalRows, message: dbErr.message });
-        errorRows++;
       }
+
+      // console.log(`[CsvImportWorker] Đã duyệt xong file. Đang cập nhật trạng thái log thành completed...`);
+      await prisma.csvImportLog.update({
+        where: { id: log.id },
+        data: {
+          status: "completed",
+          totalRows,
+          importedRows,
+          skippedRows,
+          errorRows,
+          errors: errors.length > 0 ? errors : undefined,
+          completedAt: new Date(),
+        },
+      });
+      console.log(`[CsvImportWorker] Job ${job.id} hoàn tất! Rows: ${importedRows}`);
+
+    } catch (globalError: any) {
+      // ĐÂY CHÍNH LÀ NƠI BẮT ĐƯỢC THỦ PHẠM GÂY "TREO"
+      // console.error(`[CsvImportWorker] CRASH NGẦM TOÀN CỤC:`, globalError);
+
+      // Bắt buộc update trạng thái về failed để không bị kẹt processing
+      await prisma.csvImportLog.update({
+        where: { id: log.id },
+        data: {
+          status: "failed",
+          errors: { message: globalError.message || "Unknown fatal error" },
+          completedAt: new Date(),
+        },
+      }).catch(e => console.error("Không thể update status thành failed:", e.message));
+
+      throw globalError; // Ném lỗi ra cho BullMQ biết là job xịt
     }
-
-    await prisma.csvImportLog.update({
-      where: { id: log.id },
-      data: {
-        status: "completed",
-        totalRows,
-        importedRows,
-        skippedRows,
-        errorRows,
-        errors: errors.length > 0 ? errors : undefined,
-        completedAt: new Date(),
-      },
-    });
-
-    console.log(`[CsvImportWorker] Job ${job.id} completed. Rows: ${importedRows}`);
   },
   { connection: redis }
 );

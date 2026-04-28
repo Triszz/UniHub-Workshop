@@ -1,9 +1,1001 @@
 student_id,full_name,email,faculty,year
-SV20240001,Nguyễn Văn An,sv20240001@university.edu.vn,Công nghệ thông tin,2
-SV20240002,Trần Thị Bình,sv20240002@university.edu.vn,Kinh tế,3
-SV20240003,Lê Văn Cường,sv20240003@university.edu.vn,Kỹ thuật,1
-SV20240004,Sinh Viên Bị Lỗi,sv20240004@gmail.com,Kinh tế,5
-SV20240002,Trần Thị Bình,sv20240002@university.edu.vn,Kinh tế,4
-
-
-
+SV20240293,student293,student293@university.edu.vn,Công nghệ thông tin,4
+SV20240710,student710,student710@university.edu.vn,Kinh tế,3
+SV20240781,student781,student781@university.edu.vn,Kinh tế,2
+SV20240695,student695,student695@university.edu.vn,Kỹ thuật điện,3
+SV20240216,student216,student216@university.edu.vn,Công nghệ thông tin,1
+SV202401017,student1017,student1017@university.edu.vn,Kinh tế,4
+SV202401087,student1087,student077@university.edu.vn,Kinh tế,3
+SV20240114,student114,student114@university.edu.vn,Công nghệ thông tin,4
+SV20240382,student382,student382@university.edu.vn,Kỹ thuật điện,1
+SV20240966,student966,student966@university.edu.vn,Ngoại ngữ,4
+SV20240176,student176,student176@university.edu.vn,Ngoại ngữ,3
+SV20240622,student622,student622@university.edu.vn,Công nghệ thông tin,2
+SV20240700,student700,student700@university.edu.vn,Công nghệ thông tin,1
+SV20240103,student103,student103@university.edu.vn,Kinh tế,3
+SV20240883,student883,student883@university.edu.vn,Công nghệ thông tin,2
+SV20240391,student391,student391@university.edu.vn,Ngoại ngữ,3
+SV202401030,student1030,student1030@university.edu.vn,Kỹ thuật điện,4
+SV20240206,student206,student206@university.edu.vn,Kinh tế,4
+SV20240646,student646,student646@university.edu.vn,Kinh tế,4
+SV20240630,student630,student630@university.edu.vn,Ngoại ngữ,2
+SV20240899,student899,student899@university.edu.vn,Kinh tế,3
+SV20240808,student808,student808@university.edu.vn,Kỹ thuật điện,2
+SV20240251,student251,student251@university.edu.vn,Công nghệ thông tin,1
+SV20240650,student650,student650@university.edu.vn,Kinh tế,1
+SV20240443,student443,student443@university.edu.vn,Ngoại ngữ,3
+SV20240812,student812,student812@university.edu.vn,Kinh tế,2
+,student1075,student1075@university.edu.vn,Công nghệ thông tin,3
+SV20240279,student279,student279@university.edu.vn,Công nghệ thông tin,4
+SV20240879,student879,student879@university.edu.vn,Kinh tế,1
+SV20240661,student661,student661@university.edu.vn,Kinh tế,3
+SV20240250,student250,student250@university.edu.vn,Kinh tế,2
+SV20240576,student576,student576@university.edu.vn,Ngoại ngữ,2
+SV20240897,student897,student897@university.edu.vn,Công nghệ thông tin,4
+SV20240408,student408,student408@university.edu.vn,Kinh tế,3
+SV20240403,student403,student403@university.edu.vn,Công nghệ thông tin,1
+SV202401068,,student1068@university.edu.vn,Ngoại ngữ,4
+SV202401012,student1012,student1012@university.edu.vn,Công nghệ thông tin,1
+SV20240480,student480,student480@university.edu.vn,Ngoại ngữ,1
+SV20240438,student438,student438@university.edu.vn,Kỹ thuật điện,2
+SV20240942,student942,student942@university.edu.vn,Công nghệ thông tin,1
+SV20240307,student307,student307@university.edu.vn,Công nghệ thông tin,3
+SV202401093,student1093,student096@university.edu.vn,Kỹ thuật điện,1
+SV20240477,student477,student477@university.edu.vn,Công nghệ thông tin,3
+SV20240986,student986,student986@university.edu.vn,Kinh tế,3
+SV20240916,student916,student916@university.edu.vn,Công nghệ thông tin,1
+SV202401037,student1037,student1037@university.edu.vn,Kinh tế,3
+SV20240467,student467,student467@university.edu.vn,Kỹ thuật điện,1
+SV20240418,student418,student418@university.edu.vn,Ngoại ngữ,1
+SV202401085,,student1085@university.edu.vn,Ngoại ngữ,3
+SV20240461,student461,student461@university.edu.vn,Ngoại ngữ,1
+SV20240228,student228,student228@university.edu.vn,Ngoại ngữ,4
+SV20240842,student842,student842@university.edu.vn,Kỹ thuật điện,2
+SV20240180,student180,student180@university.edu.vn,Kinh tế,4
+SV20240648,student648,student648@university.edu.vn,Ngoại ngữ,4
+SV20240197,student197,student197@university.edu.vn,Kỹ thuật điện,3
+SV20240463,student463,student463@university.edu.vn,Kinh tế,4
+SV20240111,student111,student111@university.edu.vn,Kinh tế,3
+SV20240472,student472,student472@university.edu.vn,Ngoại ngữ,4
+SV202401082,student1082,student1082@university.edu.vn,,1
+SV20240270,student270,student270@university.edu.vn,Công nghệ thông tin,1
+SV20240939,student939,student939@university.edu.vn,Ngoại ngữ,1
+SV20240497,student497,student497@university.edu.vn,Công nghệ thông tin,4
+SV20240806,student806,student806@university.edu.vn,Công nghệ thông tin,3
+SV20240629,student629,student629@university.edu.vn,Kinh tế,2
+SV20240946,student946,student946@university.edu.vn,Kinh tế,1
+SV20240508,student508,student508@university.edu.vn,Công nghệ thông tin,3
+SV20240905,student905,student905@university.edu.vn,Công nghệ thông tin,3
+SV20240301,student301,student301@university.edu.vn,Ngoại ngữ,2
+SV20240545,student545,student545@university.edu.vn,Kinh tế,4
+SV20240779,student779,student779@university.edu.vn,Công nghệ thông tin,3
+SV20240271,student271,student271@university.edu.vn,Kinh tế,3
+SV20240804,student804,student804@university.edu.vn,Kinh tế,3
+SV20240635,student635,student635@university.edu.vn,Kinh tế,2
+SV20240462,student462,student462@university.edu.vn,Kinh tế,3
+SV20240943,student943,student943@university.edu.vn,Kinh tế,3
+SV20240325,student325,student325@university.edu.vn,Công nghệ thông tin,3
+SV20240994,student994,student994@university.edu.vn,Kinh tế,3
+SV20240353,student353,student353@university.edu.vn,Kỹ thuật điện,4
+SV20240544,student544,student544@university.edu.vn,Công nghệ thông tin,4
+SV20240113,student113,student113@university.edu.vn,Ngoại ngữ,1
+SV20240586,student586,student586@university.edu.vn,Công nghệ thông tin,4
+SV20240600,student600,student600@university.edu.vn,Công nghệ thông tin,3
+SV20240953,student953,student953@university.edu.vn,Kinh tế,2
+SV20240599,student599,student599@university.edu.vn,Kinh tế,2
+SV20240940,student940,student940@university.edu.vn,Ngoại ngữ,3
+SV20240511,student511,student511@university.edu.vn,Kinh tế,3
+SV20240633,student633,student633@university.edu.vn,Ngoại ngữ,2
+SV20240205,student205,student205@university.edu.vn,Kỹ thuật điện,2
+SV20240834,student834,student834@university.edu.vn,Công nghệ thông tin,2
+SV20240644,student644,student644@university.edu.vn,Kỹ thuật điện,4
+SV20240171,student171,student171@university.edu.vn,Kinh tế,1
+SV20240385,student385,student385@university.edu.vn,Kinh tế,3
+SV20240517,student517,student517@university.edu.vn,Kỹ thuật điện,1
+SV20240369,student369,student369@university.edu.vn,Kinh tế,3
+SV20240551,student551,student551@university.edu.vn,Kỹ thuật điện,2
+SV20240816,student816,student816@university.edu.vn,Kỹ thuật điện,4
+SV20240259,student259,student259@university.edu.vn,Công nghệ thông tin,1
+SV202401043,student1043,student1043@university.edu.vn,Công nghệ thông tin,4
+SV20240272,student272,student272@university.edu.vn,Công nghệ thông tin,2
+SV20240861,student861,student861@university.edu.vn,Ngoại ngữ,3
+SV20240771,student771,student771@university.edu.vn,Ngoại ngữ,3
+SV20240302,student302,student302@university.edu.vn,Kinh tế,2
+SV20240719,student719,student719@university.edu.vn,Công nghệ thông tin,1
+SV202401078,,student1078@university.edu.vn,Ngoại ngữ,3
+SV202401031,student1031,student1031@university.edu.vn,Công nghệ thông tin,3
+SV20240659,student659,student659@university.edu.vn,Kinh tế,1
+SV20240677,student677,student677@university.edu.vn,Ngoại ngữ,3
+SV20240359,student359,student359@university.edu.vn,Kinh tế,1
+SV20240425,student425,student425@university.edu.vn,Ngoại ngữ,4
+SV20240155,student155,student155@university.edu.vn,Công nghệ thông tin,4
+SV20240296,student296,student296@university.edu.vn,Kinh tế,4
+SV20240137,student137,student137@university.edu.vn,Công nghệ thông tin,1
+SV20240428,student428,student428@university.edu.vn,Kỹ thuật điện,1
+SV20240145,student145,student145@university.edu.vn,Kỹ thuật điện,3
+SV20240264,student264,student264@university.edu.vn,Kỹ thuật điện,3
+SV20240867,student867,student867@university.edu.vn,Ngoại ngữ,2
+SV20240496,student496,student496@university.edu.vn,Kinh tế,4
+SV20240632,student632,student632@university.edu.vn,Công nghệ thông tin,2
+SV20240696,student696,student696@university.edu.vn,Kỹ thuật điện,3
+SV20240619,student619,student619@university.edu.vn,Ngoại ngữ,2
+SV20240654,student654,student654@university.edu.vn,Kỹ thuật điện,2
+SV20240967,student967,student967@university.edu.vn,Kinh tế,4
+SV20240875,student875,student875@university.edu.vn,Công nghệ thông tin,1
+SV20240563,student563,student563@university.edu.vn,Ngoại ngữ,2
+SV20240764,student764,student764@university.edu.vn,Công nghệ thông tin,4
+SV20240115,student115,student115@university.edu.vn,Ngoại ngữ,1
+SV20240122,student122,student122@university.edu.vn,Kỹ thuật điện,2
+SV20240908,student908,student908@university.edu.vn,Ngoại ngữ,4
+SV202401057,student1057,student1057@outlook.com,Công nghệ thông tin,1
+SV20240295,student295,student295@university.edu.vn,Ngoại ngữ,4
+SV20240528,student528,student528@university.edu.vn,Công nghệ thông tin,1
+SV20240410,student410,student410@university.edu.vn,Công nghệ thông tin,1
+SV20240888,student888,student888@university.edu.vn,Kinh tế,3
+SV202401005,student1005,student1005@university.edu.vn,Kỹ thuật điện,3
+SV20240399,student399,student399@university.edu.vn,Kỹ thuật điện,4
+SV20240402,student402,student402@university.edu.vn,Công nghệ thông tin,1
+SV20240387,student387,student387@university.edu.vn,Kỹ thuật điện,3
+SV20240667,student667,student667@university.edu.vn,Kỹ thuật điện,3
+SV20240590,student590,student590@university.edu.vn,Công nghệ thông tin,3
+SV20240612,student612,student612@university.edu.vn,Kinh tế,1
+SV20240149,student149,student149@university.edu.vn,Kinh tế,4
+SV20240447,student447,student447@university.edu.vn,Công nghệ thông tin,1
+SV20240655,student655,student655@university.edu.vn,Ngoại ngữ,3
+SV20240748,student748,student748@university.edu.vn,Kinh tế,3
+SV20240689,student689,student689@university.edu.vn,Công nghệ thông tin,3
+SV20240701,student701,student701@university.edu.vn,Kinh tế,2
+SV20240131,student131,student131@university.edu.vn,Công nghệ thông tin,3
+SV20240125,student125,student125@university.edu.vn,Công nghệ thông tin,1
+SV20240455,student455,student455@university.edu.vn,Kinh tế,3
+SV20240843,student843,student843@university.edu.vn,Kinh tế,2
+SV20240796,student796,student796@university.edu.vn,Kinh tế,2
+SV202401040,student1040,student1040@university.edu.vn,Kinh tế,2
+SV20240707,student707,student707@university.edu.vn,Ngoại ngữ,1
+SV20240104,student104,student104@university.edu.vn,Kỹ thuật điện,1
+SV20240929,student929,student929@university.edu.vn,Kỹ thuật điện,4
+SV20240721,student721,student721@university.edu.vn,Ngoại ngữ,3
+SV20240651,student651,student651@university.edu.vn,Kinh tế,2
+SV20240909,student909,student909@university.edu.vn,Kinh tế,4
+SV20240154,student154,student154@university.edu.vn,Kinh tế,1
+SV202401050,student1050,student1050@university.edu.vn,Kinh tế,1
+SV20240797,student797,student797@university.edu.vn,Công nghệ thông tin,2
+SV20240840,student840,student840@university.edu.vn,Kinh tế,1
+SV20240668,student668,student668@university.edu.vn,Kinh tế,2
+SV202401067,,student1067@university.edu.vn,Công nghệ thông tin,4
+SV20240254,student254,student254@university.edu.vn,Ngoại ngữ,3
+SV20240683,student683,student683@university.edu.vn,Công nghệ thông tin,4
+SV20240106,student106,student106@university.edu.vn,Kỹ thuật điện,3
+SV20240621,student621,student621@university.edu.vn,Ngoại ngữ,4
+SV20240938,student938,student938@university.edu.vn,Ngoại ngữ,4
+SV20240458,student458,student458@university.edu.vn,Ngoại ngữ,3
+SV20240520,student520,student520@university.edu.vn,Ngoại ngữ,2
+SV20240860,student860,student860@university.edu.vn,Kỹ thuật điện,3
+SV20240833,student833,student833@university.edu.vn,Công nghệ thông tin,1
+SV20240686,student686,student686@university.edu.vn,Kỹ thuật điện,3
+SV20240116,student116,student116@university.edu.vn,Kinh tế,1
+SV20240653,student653,student653@university.edu.vn,Kỹ thuật điện,2
+SV20240952,student952,student952@university.edu.vn,Công nghệ thông tin,4
+SV20240868,student868,student868@university.edu.vn,Ngoại ngữ,1
+SV20240229,student229,student229@university.edu.vn,Công nghệ thông tin,2
+SV20240920,student920,student920@university.edu.vn,Ngoại ngữ,4
+SV20240727,student727,student727@university.edu.vn,Ngoại ngữ,3
+SV20240161,student161,student161@university.edu.vn,Ngoại ngữ,3
+SV20240640,student640,student640@university.edu.vn,Kinh tế,4
+SV202401083,student1083,student1083@university.edu.vn,Kỹ thuật điện,
+SV20240756,student756,student756@university.edu.vn,Công nghệ thông tin,3
+SV20240972,student972,student972@university.edu.vn,Ngoại ngữ,1
+SV20240932,student932,student932@university.edu.vn,Kỹ thuật điện,2
+SV20240252,student252,student252@university.edu.vn,Kinh tế,2
+SV202401004,student1004,student1004@university.edu.vn,Ngoại ngữ,4
+SV202401007,student1007,student1007@university.edu.vn,Ngoại ngữ,2
+SV20240772,student772,student772@university.edu.vn,Ngoại ngữ,4
+SV20240210,student210,student210@university.edu.vn,Công nghệ thông tin,1
+SV20240280,student280,student280@university.edu.vn,Công nghệ thông tin,1
+SV20240196,student196,student196@university.edu.vn,Kỹ thuật điện,1
+SV20240257,student257,student257@university.edu.vn,Ngoại ngữ,3
+SV20240892,student892,student892@university.edu.vn,Công nghệ thông tin,4
+SV20240970,student970,student970@university.edu.vn,Kỹ thuật điện,4
+SV20240839,student839,student839@university.edu.vn,Kỹ thuật điện,2
+SV202401086,student1086,student094@university.edu.vn,Ngoại ngữ,4
+SV20240316,student316,student316@university.edu.vn,Công nghệ thông tin,2
+SV20240906,student906,student906@university.edu.vn,Kinh tế,2
+SV20240246,student246,student246@university.edu.vn,Công nghệ thông tin,1
+SV20240168,student168,student168@university.edu.vn,Kỹ thuật điện,2
+SV20240201,student201,student201@university.edu.vn,Kỹ thuật điện,1
+SV20240971,student971,student971@university.edu.vn,Kinh tế,3
+SV20240194,student194,student194@university.edu.vn,Kinh tế,1
+SV20240995,student995,student995@university.edu.vn,Công nghệ thông tin,3
+SV20240578,student578,student578@university.edu.vn,Công nghệ thông tin,2
+SV20240278,student278,student278@university.edu.vn,Kỹ thuật điện,4
+SV20240961,student961,student961@university.edu.vn,Kỹ thuật điện,2
+SV20240813,student813,student813@university.edu.vn,Kinh tế,3
+SV20240718,student718,student718@university.edu.vn,Ngoại ngữ,4
+SV20240706,student706,student706@university.edu.vn,Ngoại ngữ,3
+SV20240376,student376,student376@university.edu.vn,Kỹ thuật điện,4
+SV20240572,student572,student572@university.edu.vn,Công nghệ thông tin,4
+SV20240989,student989,student989@university.edu.vn,Công nghệ thông tin,4
+SV20240547,student547,student547@university.edu.vn,Kỹ thuật điện,4
+SV20240444,student444,student444@university.edu.vn,Công nghệ thông tin,2
+SV20240150,student150,student150@university.edu.vn,Kỹ thuật điện,3
+SV202401055,student1055,student1055@yahoo.com,Kinh tế,3
+SV20240118,student118,student118@university.edu.vn,Kỹ thuật điện,1
+SV20240471,student471,student471@university.edu.vn,Công nghệ thông tin,2
+SV20240429,student429,student429@university.edu.vn,Kỹ thuật điện,1
+SV20240491,student491,student491@university.edu.vn,Ngoại ngữ,4
+SV20240885,student885,student885@university.edu.vn,Ngoại ngữ,3
+SV20240949,student949,student949@university.edu.vn,Công nghệ thông tin,1
+SV20240656,student656,student656@university.edu.vn,Kinh tế,3
+SV20240536,student536,student536@university.edu.vn,Công nghệ thông tin,2
+SV20240913,student913,student913@university.edu.vn,Kinh tế,4
+SV20240948,student948,student948@university.edu.vn,Công nghệ thông tin,3
+SV20240982,student982,student982@university.edu.vn,Công nghệ thông tin,1
+SV20240414,student414,student414@university.edu.vn,Công nghệ thông tin,3
+SV20240231,student231,student231@university.edu.vn,Kinh tế,4
+SV20240981,student981,student981@university.edu.vn,Ngoại ngữ,1
+SV20240783,student783,student783@university.edu.vn,Công nghệ thông tin,2
+SV202401072,student1072,student1072@university.edu.vn,Công nghệ thông tin,
+SV202401090,student1090,student063@university.edu.vn,Kỹ thuật điện,2
+SV20240419,student419,student419@university.edu.vn,Ngoại ngữ,3
+SV20240422,student422,student422@university.edu.vn,Công nghệ thông tin,2
+SV20240657,student657,student657@university.edu.vn,Kinh tế,4
+SV20240384,student384,student384@university.edu.vn,Công nghệ thông tin,4
+SV20240735,student735,student735@university.edu.vn,Công nghệ thông tin,1
+SV202401018,student1018,student1018@university.edu.vn,Kỹ thuật điện,4
+SV20240373,student373,student373@university.edu.vn,Ngoại ngữ,2
+SV20240341,student341,student341@university.edu.vn,Kinh tế,4
+SV20240474,student474,student474@university.edu.vn,Ngoại ngữ,4
+SV20240626,student626,student626@university.edu.vn,Ngoại ngữ,4
+SV20240158,student158,student158@university.edu.vn,Kinh tế,4
+SV20240509,student509,student509@university.edu.vn,Kinh tế,2
+SV20240733,student733,student733@university.edu.vn,Ngoại ngữ,4
+SV202401096,student1096,student084@university.edu.vn,Công nghệ thông tin,4
+SV20240164,student164,student164@university.edu.vn,Ngoại ngữ,2
+SV20240526,student526,student526@university.edu.vn,Kinh tế,3
+SV20240895,student895,student895@university.edu.vn,Công nghệ thông tin,3
+SV20240397,student397,student397@university.edu.vn,Công nghệ thông tin,3
+SV20240213,student213,student213@university.edu.vn,Công nghệ thông tin,1
+SV202401054,student1054,student1054@outlook.com,Kinh tế,1
+SV20240930,student930,student930@university.edu.vn,Công nghệ thông tin,3
+SV20240822,student822,student822@university.edu.vn,Kỹ thuật điện,4
+SV20240388,student388,student388@university.edu.vn,Công nghệ thông tin,4
+SV202401052,student1052,student1052@yahoo.com,Công nghệ thông tin,2
+SV20240310,student310,student310@university.edu.vn,Ngoại ngữ,4
+SV20240355,student355,student355@university.edu.vn,Kỹ thuật điện,3
+SV20240548,student548,student548@university.edu.vn,Công nghệ thông tin,2
+SV20240123,student123,student123@university.edu.vn,Ngoại ngữ,3
+SV20240582,student582,student582@university.edu.vn,Công nghệ thông tin,4
+SV20240299,student299,student299@university.edu.vn,Ngoại ngữ,4
+SV20240587,student587,student587@university.edu.vn,Công nghệ thông tin,1
+SV20240487,student487,student487@university.edu.vn,Ngoại ngữ,4
+SV202401025,student1025,student1025@university.edu.vn,Ngoại ngữ,1
+SV20240232,student232,student232@university.edu.vn,Kinh tế,2
+SV20240817,student817,student817@university.edu.vn,Ngoại ngữ,1
+SV20240185,student185,student185@university.edu.vn,Ngoại ngữ,4
+SV202401045,student1045,student1045@university.edu.vn,Kỹ thuật điện,4
+SV20240803,student803,student803@university.edu.vn,Công nghệ thông tin,3
+SV20240177,student177,student177@university.edu.vn,Công nghệ thông tin,2
+SV20240984,student984,student984@university.edu.vn,Công nghệ thông tin,1
+SV202401036,student1036,student1036@university.edu.vn,Công nghệ thông tin,1
+SV20240741,student741,student741@university.edu.vn,Kinh tế,4
+SV202401019,student1019,student1019@university.edu.vn,Kinh tế,3
+SV20240628,student628,student628@university.edu.vn,Kinh tế,3
+SV202401091,student1091,student097@university.edu.vn,Kinh tế,1
+SV20240374,student374,student374@university.edu.vn,Kinh tế,1
+SV20240782,student782,student782@university.edu.vn,Ngoại ngữ,1
+SV20240731,student731,student731@university.edu.vn,Kinh tế,4
+SV20240988,student988,student988@university.edu.vn,Ngoại ngữ,2
+SV20240881,student881,student881@university.edu.vn,Kỹ thuật điện,3
+SV20240768,student768,student768@university.edu.vn,Công nghệ thông tin,2
+SV20240557,student557,student557@university.edu.vn,Ngoại ngữ,3
+SV202401010,student1010,student1010@university.edu.vn,Ngoại ngữ,2
+SV20240751,student751,student751@university.edu.vn,Ngoại ngữ,3
+SV20240406,student406,student406@university.edu.vn,Kỹ thuật điện,3
+SV20240959,student959,student959@university.edu.vn,Công nghệ thông tin,3
+SV20240957,student957,student957@university.edu.vn,Kỹ thuật điện,3
+SV202401033,student1033,student1033@university.edu.vn,Kỹ thuật điện,3
+SV20240819,student819,student819@university.edu.vn,Ngoại ngữ,2
+SV20240750,student750,student750@university.edu.vn,Công nghệ thông tin,1
+SV20240188,student188,student188@university.edu.vn,Kinh tế,2
+SV20240652,student652,student652@university.edu.vn,Kỹ thuật điện,1
+SV20240147,student147,student147@university.edu.vn,Kỹ thuật điện,1
+SV20240237,student237,student237@university.edu.vn,Kỹ thuật điện,3
+SV20240405,student405,student405@university.edu.vn,Kỹ thuật điện,4
+SV20240400,student400,student400@university.edu.vn,Ngoại ngữ,3
+SV20240923,student923,student923@university.edu.vn,Công nghệ thông tin,2
+SV20240903,student903,student903@university.edu.vn,Công nghệ thông tin,3
+SV20240878,student878,student878@university.edu.vn,Ngoại ngữ,4
+SV20240747,student747,student747@university.edu.vn,Kinh tế,4
+SV20240712,student712,student712@university.edu.vn,Kinh tế,2
+SV20240670,student670,student670@university.edu.vn,Ngoại ngữ,1
+SV20240777,student777,student777@university.edu.vn,Ngoại ngữ,4
+SV20240681,student681,student681@university.edu.vn,Kỹ thuật điện,2
+SV20240594,student594,student594@university.edu.vn,Công nghệ thông tin,4
+SV202401089,student1089,student019@university.edu.vn,Ngoại ngữ,1
+SV20240918,student918,student918@university.edu.vn,Kinh tế,2
+SV20240366,student366,student366@university.edu.vn,Kỹ thuật điện,2
+SV20240672,student672,student672@university.edu.vn,Công nghệ thông tin,3
+SV20240324,student324,student324@university.edu.vn,Công nghệ thông tin,4
+student1084,student1084@university.edu.vn,Kỹ thuật điện,4
+SV20240571,student571,student571@university.edu.vn,Kỹ thuật điện,3
+SV20240616,student616,student616@university.edu.vn,Kinh tế,2
+SV20240395,student395,student395@university.edu.vn,Công nghệ thông tin,1
+SV202401079,,student1079@university.edu.vn,Ngoại ngữ,1
+SV20240603,student603,student603@university.edu.vn,Kỹ thuật điện,4
+SV20240699,student699,student699@university.edu.vn,Kinh tế,1
+SV20240588,student588,student588@university.edu.vn,Kỹ thuật điện,4
+SV202401009,student1009,student1009@university.edu.vn,Kinh tế,2
+SV20240605,student605,student605@university.edu.vn,Công nghệ thông tin,1
+SV20240987,student987,student987@university.edu.vn,Kinh tế,4
+SV20240857,student857,student857@university.edu.vn,Công nghệ thông tin,4
+SV20240762,student762,student762@university.edu.vn,Kinh tế,4
+SV20240901,student901,student901@university.edu.vn,Ngoại ngữ,3
+SV20240360,student360,student360@university.edu.vn,Ngoại ngữ,1
+SV20240631,student631,student631@university.edu.vn,Kỹ thuật điện,4
+SV20240602,student602,student602@university.edu.vn,Kinh tế,3
+SV20240787,student787,student787@university.edu.vn,Kinh tế,2
+SV20240423,student423,student423@university.edu.vn,Kinh tế,4
+SV20240535,student535,student535@university.edu.vn,Kỹ thuật điện,3
+SV20240435,student435,student435@university.edu.vn,Ngoại ngữ,1
+SV20240159,student159,student159@university.edu.vn,Công nghệ thông tin,1
+SV20240432,student432,student432@university.edu.vn,Kỹ thuật điện,2
+SV20240829,student829,student829@university.edu.vn,Ngoại ngữ,2
+SV20240372,student372,student372@university.edu.vn,Ngoại ngữ,3
+SV20240871,student871,student871@university.edu.vn,Công nghệ thông tin,2
+SV20240505,student505,student505@university.edu.vn,Kinh tế,2
+SV20240623,student623,student623@university.edu.vn,Công nghệ thông tin,3
+SV20240306,student306,student306@university.edu.vn,Công nghệ thông tin,3
+SV20240312,student312,student312@university.edu.vn,Kinh tế,3
+SV20240820,student820,student820@university.edu.vn,Ngoại ngữ,1
+SV20240225,student225,student225@university.edu.vn,Ngoại ngữ,1
+SV20240936,student936,student936@university.edu.vn,Kinh tế,1
+SV202401008,student1008,student1008@university.edu.vn,Kỹ thuật điện,2
+SV20240848,student848,student848@university.edu.vn,Ngoại ngữ,3
+SV202401003,student1003,student1003@university.edu.vn,Ngoại ngữ,3
+SV20240172,student172,student172@university.edu.vn,Công nghệ thông tin,3
+SV20240396,student396,student396@university.edu.vn,Công nghệ thông tin,3
+SV20240665,student665,student665@university.edu.vn,Công nghệ thông tin,1
+SV20240620,student620,student620@university.edu.vn,Công nghệ thông tin,3
+SV20240421,student421,student421@university.edu.vn,Ngoại ngữ,2
+SV20240265,student265,student265@university.edu.vn,Công nghệ thông tin,3
+SV20240801,student801,student801@university.edu.vn,Ngoại ngữ,1
+SV20240985,student985,student985@university.edu.vn,Kinh tế,3
+SV20240217,student217,student217@university.edu.vn,Công nghệ thông tin,4
+SV20240285,student285,student285@university.edu.vn,Công nghệ thông tin,4
+SV20240580,student580,student580@university.edu.vn,Ngoại ngữ,3
+SV202401063,student1063,student1063@outlook.com,Ngoại ngữ,1
+SV20240673,student673,student673@university.edu.vn,Kinh tế,4
+SV20240256,student256,student256@university.edu.vn,Công nghệ thông tin,1
+SV20240258,student258,student258@university.edu.vn,Ngoại ngữ,3
+SV20240120,student120,student120@university.edu.vn,Kỹ thuật điện,3
+SV20240460,student460,student460@university.edu.vn,Công nghệ thông tin,1
+SV20240181,student181,student181@university.edu.vn,Ngoại ngữ,3
+SV20240774,student774,student774@university.edu.vn,Kỹ thuật điện,2
+SV20240802,student802,student802@university.edu.vn,Kỹ thuật điện,2
+SV20240407,student407,student407@university.edu.vn,Kinh tế,1
+SV20240309,student309,student309@university.edu.vn,Công nghệ thông tin,4
+SV20240356,student356,student356@university.edu.vn,Kinh tế,4
+SV20240574,student574,student574@university.edu.vn,Kỹ thuật điện,3
+SV20240729,student729,student729@university.edu.vn,Kinh tế,2
+SV202401044,student1044,student1044@university.edu.vn,Ngoại ngữ,3
+SV20240685,student685,student685@university.edu.vn,Công nghệ thông tin,3
+SV20240144,student144,student144@university.edu.vn,Ngoại ngữ,3
+SV20240693,student693,student693@university.edu.vn,Kinh tế,3
+SV20240859,student859,student859@university.edu.vn,Kinh tế,1
+SV20240199,student199,student199@university.edu.vn,Ngoại ngữ,4
+SV20240690,student690,student690@university.edu.vn,Kinh tế,2
+SV20240954,student954,student954@university.edu.vn,Kinh tế,2
+SV20240532,student532,student532@university.edu.vn,Ngoại ngữ,1
+SV20240494,student494,student494@university.edu.vn,Kỹ thuật điện,2
+SV20240269,student269,student269@university.edu.vn,Kinh tế,3
+SV20240170,student170,student170@university.edu.vn,Kinh tế,3
+SV20240960,student960,student960@university.edu.vn,Kỹ thuật điện,3
+SV20240338,student338,student338@university.edu.vn,Kinh tế,1
+SV20240974,student974,student974@university.edu.vn,Kinh tế,2
+SV20240529,student529,student529@university.edu.vn,Công nghệ thông tin,3
+SV20240244,student244,student244@university.edu.vn,Ngoại ngữ,1
+SV20240882,student882,student882@university.edu.vn,Ngoại ngữ,2
+SV20240618,student618,student618@university.edu.vn,Ngoại ngữ,2
+SV202401014,student1014,student1014@university.edu.vn,Công nghệ thông tin,4
+SV20240562,student562,student562@university.edu.vn,Công nghệ thông tin,1
+SV202401035,student1035,student1035@university.edu.vn,Kỹ thuật điện,3
+SV202401069,student1069,,Kỹ thuật điện,3
+SV20240204,student204,student204@university.edu.vn,Công nghệ thông tin,1
+SV20240441,student441,student441@university.edu.vn,Ngoại ngữ,1
+SV20240141,student141,student141@university.edu.vn,Công nghệ thông tin,2
+SV20240550,student550,student550@university.edu.vn,Kỹ thuật điện,2
+SV20240449,student449,student449@university.edu.vn,Kỹ thuật điện,3
+SV20240165,student165,student165@university.edu.vn,Kinh tế,1
+SV20240290,student290,student290@university.edu.vn,Kỹ thuật điện,3
+SV20240643,student643,student643@university.edu.vn,Kinh tế,2
+SV20240793,student793,student793@university.edu.vn,Kỹ thuật điện,4
+SV20240660,student660,student660@university.edu.vn,Ngoại ngữ,3
+SV20240830,student830,student830@university.edu.vn,Kỹ thuật điện,1
+SV20240243,student243,student243@university.edu.vn,Kỹ thuật điện,2
+SV20240238,student238,student238@university.edu.vn,Kỹ thuật điện,4
+SV20240963,student963,student963@university.edu.vn,Kỹ thuật điện,1
+SV20240107,student107,student107@university.edu.vn,Ngoại ngữ,3
+SV20240286,student286,student286@university.edu.vn,Kinh tế,3
+SV202401021,student1021,student1021@university.edu.vn,Kỹ thuật điện,2
+SV20240126,student126,student126@university.edu.vn,Kinh tế,4
+SV20240121,student121,student121@university.edu.vn,Kỹ thuật điện,4
+SV202401099,student1099,student100@university.edu.vn,Ngoại ngữ,3
+SV20240560,student560,student560@university.edu.vn,Ngoại ngữ,2
+SV20240968,student968,student968@university.edu.vn,Công nghệ thông tin,2
+SV20240944,student944,student944@university.edu.vn,Kinh tế,2
+SV20240153,student153,student153@university.edu.vn,Kinh tế,3
+SV20240354,student354,student354@university.edu.vn,Công nghệ thông tin,4
+SV20240415,student415,student415@university.edu.vn,Ngoại ngữ,4
+SV20240530,student530,student530@university.edu.vn,Kinh tế,3
+SV20240997,student997,student997@university.edu.vn,Công nghệ thông tin,2
+SV20240267,student267,student267@university.edu.vn,Kỹ thuật điện,4
+SV20240866,student866,student866@university.edu.vn,Ngoại ngữ,4
+SV20240282,student282,student282@university.edu.vn,Kỹ thuật điện,3
+SV20240390,student390,student390@university.edu.vn,Kinh tế,1
+SV20240380,student380,student380@university.edu.vn,Kỹ thuật điện,3
+SV20240697,student697,student697@university.edu.vn,Ngoại ngữ,1
+SV20240730,student730,student730@university.edu.vn,Kỹ thuật điện,2
+SV202401022,student1022,student1022@university.edu.vn,Công nghệ thông tin,3
+SV20240891,student891,student891@university.edu.vn,Ngoại ngữ,2
+SV202401006,student1006,student1006@university.edu.vn,Kinh tế,4
+SV20240157,student157,student157@university.edu.vn,Kinh tế,2
+SV20240925,student925,student925@university.edu.vn,Kinh tế,1
+SV20240810,student810,student810@university.edu.vn,Kinh tế,3
+SV20240993,student993,student993@university.edu.vn,Kỹ thuật điện,4
+SV20240119,student119,student119@university.edu.vn,Ngoại ngữ,1
+SV20240951,student951,student951@university.edu.vn,Kinh tế,3
+SV20240152,student152,student152@university.edu.vn,Kỹ thuật điện,2
+SV20240101,student101,student101@university.edu.vn,Công nghệ thông tin,4
+SV20240569,student569,student569@university.edu.vn,Kinh tế,1
+SV20240297,student297,student297@university.edu.vn,Kỹ thuật điện,4
+SV20240593,student593,student593@university.edu.vn,Kinh tế,1
+SV20240975,student975,student975@university.edu.vn,Ngoại ngữ,3
+SV20240321,student321,student321@university.edu.vn,Công nghệ thông tin,3
+SV20240488,student488,student488@university.edu.vn,Công nghệ thông tin,3
+SV20240284,student284,student284@university.edu.vn,Ngoại ngữ,4
+SV20240836,student836,student836@university.edu.vn,Kỹ thuật điện,3
+SV20240854,student854,student854@university.edu.vn,Ngoại ngữ,4
+SV20240345,student345,student345@university.edu.vn,Kỹ thuật điện,4
+SV20240386,student386,student386@university.edu.vn,Kỹ thuật điện,3
+SV202401038,student1038,student1038@university.edu.vn,Công nghệ thông tin,1
+SV20240725,student725,student725@university.edu.vn,Kinh tế,3
+SV202401051,student1051,student1051@outlook.com,Kỹ thuật điện,2
+SV20240980,student980,student980@university.edu.vn,Kỹ thuật điện,4
+SV20240326,student326,student326@university.edu.vn,Kinh tế,1
+SV20240704,student704,student704@university.edu.vn,Kinh tế,3
+SV20240274,student274,student274@university.edu.vn,Kỹ thuật điện,1
+SV20240852,student852,student852@university.edu.vn,Kinh tế,1
+SV20240236,student236,student236@university.edu.vn,Kỹ thuật điện,1
+SV20240795,student795,student795@university.edu.vn,Ngoại ngữ,1
+SV20240870,student870,student870@university.edu.vn,Kinh tế,2
+SV20240117,student117,student117@university.edu.vn,Công nghệ thông tin,3
+SV20240649,student649,student649@university.edu.vn,Công nghệ thông tin,2
+SV20240713,student713,student713@university.edu.vn,Kỹ thuật điện,3
+SV20240785,student785,student785@university.edu.vn,Ngoại ngữ,1
+SV20240493,student493,student493@university.edu.vn,Ngoại ngữ,2
+SV20240186,student186,student186@university.edu.vn,Kỹ thuật điện,4
+SV202401000,student1000,student1000@university.edu.vn,Ngoại ngữ,2
+SV20240825,student825,student825@university.edu.vn,Công nghệ thông tin,2
+SV20240561,student561,student561@university.edu.vn,Kỹ thuật điện,1
+SV20240684,student684,student684@university.edu.vn,Kinh tế,3
+SV20240504,student504,student504@university.edu.vn,Kinh tế,4
+SV20240416,student416,student416@university.edu.vn,Công nghệ thông tin,1
+SV20240453,student453,student453@university.edu.vn,Kỹ thuật điện,2
+SV20240227,student227,student227@university.edu.vn,Kỹ thuật điện,1
+SV20240515,student515,student515@university.edu.vn,Kinh tế,2
+SV20240996,student996,student996@university.edu.vn,Kỹ thuật điện,1
+SV202401029,student1029,student1029@university.edu.vn,Công nghệ thông tin,4
+SV20240288,student288,student288@university.edu.vn,Kỹ thuật điện,2
+SV20240255,student255,student255@university.edu.vn,Ngoại ngữ,3
+SV20240346,student346,student346@university.edu.vn,Công nghệ thông tin,2
+SV20240924,student924,student924@university.edu.vn,Kỹ thuật điện,3
+SV20240887,student887,student887@university.edu.vn,Kinh tế,4
+SV20240498,student498,student498@university.edu.vn,Ngoại ngữ,3
+SV202401049,student1049,student1049@university.edu.vn,Ngoại ngữ,4
+SV20240805,student805,student805@university.edu.vn,Công nghệ thông tin,2
+SV20240134,student134,student134@university.edu.vn,Kỹ thuật điện,1
+SV20240757,student757,student757@university.edu.vn,Kỹ thuật điện,4
+SV20240198,student198,student198@university.edu.vn,Ngoại ngữ,4
+SV202401060,student1060,student1060@yahoo.com,Kỹ thuật điện,3
+SV20240178,student178,student178@university.edu.vn,Công nghệ thông tin,3
+SV20240534,student534,student534@university.edu.vn,Kinh tế,3
+SV20240344,student344,student344@university.edu.vn,Công nghệ thông tin,4
+SV20240858,student858,student858@university.edu.vn,Ngoại ngữ,3
+SV20240183,student183,student183@university.edu.vn,Kỹ thuật điện,4
+SV202401041,student1041,student1041@university.edu.vn,Ngoại ngữ,4
+SV20240190,student190,student190@university.edu.vn,Công nghệ thông tin,1
+SV20240336,student336,student336@university.edu.vn,Công nghệ thông tin,4
+SV20240476,student476,student476@university.edu.vn,Ngoại ngữ,2
+SV20240263,student263,student263@university.edu.vn,Kinh tế,4
+SV20240468,student468,student468@university.edu.vn,Công nghệ thông tin,2
+SV20240361,student361,student361@university.edu.vn,Kinh tế,3
+SV20240110,student110,student110@university.edu.vn,Kỹ thuật điện,3
+SV20240606,student606,student606@university.edu.vn,Kỹ thuật điện,1
+SV20240798,student798,student798@university.edu.vn,Ngoại ngữ,1
+SV20240224,student224,student224@university.edu.vn,Công nghệ thông tin,2
+SV20240674,student674,student674@university.edu.vn,Kinh tế,2
+SV20240845,student845,student845@university.edu.vn,Kỹ thuật điện,2
+SV202401047,student1047,student1047@university.edu.vn,Kỹ thuật điện,2
+SV20240611,student611,student611@university.edu.vn,Công nghệ thông tin,4
+SV20240203,student203,student203@university.edu.vn,Kinh tế,1
+SV20240556,student556,student556@university.edu.vn,Công nghệ thông tin,1
+SV20240465,student465,student465@university.edu.vn,Ngoại ngữ,3
+SV20240187,student187,student187@university.edu.vn,Công nghệ thông tin,4
+SV20240484,student484,student484@university.edu.vn,Kỹ thuật điện,2
+SV202401062,student1062,student1062@yahoo.com,Công nghệ thông tin,1
+SV20240811,student811,student811@university.edu.vn,Ngoại ngữ,2
+SV20240412,student412,student412@university.edu.vn,Công nghệ thông tin,4
+SV20240723,student723,student723@university.edu.vn,Công nghệ thông tin,2
+SV20240348,student348,student348@university.edu.vn,Kỹ thuật điện,2
+SV20240585,student585,student585@university.edu.vn,Kỹ thuật điện,3
+SV20240226,student226,student226@university.edu.vn,Kỹ thuật điện,1
+SV20240112,student112,student112@university.edu.vn,Kỹ thuật điện,4
+SV20240728,student728,student728@university.edu.vn,Kỹ thuật điện,2
+SV20240669,student669,student669@university.edu.vn,Kỹ thuật điện,2
+SV20240743,student743,student743@university.edu.vn,Công nghệ thông tin,4
+SV20240334,student334,student334@university.edu.vn,Kinh tế,1
+SV20240135,student135,student135@university.edu.vn,Kinh tế,4
+SV20240641,student641,student641@university.edu.vn,Kinh tế,2
+SV202401013,student1013,student1013@university.edu.vn,Công nghệ thông tin,4
+SV202401020,student1020,student1020@university.edu.vn,Ngoại ngữ,1
+SV20240770,student770,student770@university.edu.vn,Kinh tế,1
+SV20240823,student823,student823@university.edu.vn,Kinh tế,1
+SV20240601,student601,student601@university.edu.vn,Kinh tế,4
+SV20240709,student709,student709@university.edu.vn,Công nghệ thông tin,4
+SV20240166,student166,student166@university.edu.vn,Kỹ thuật điện,4
+SV20240539,student539,student539@university.edu.vn,Ngoại ngữ,2
+SV20240132,student132,student132@university.edu.vn,Công nghệ thông tin,3
+SV202401016,student1016,student1016@university.edu.vn,Công nghệ thông tin,1
+SV20240417,student417,student417@university.edu.vn,Kỹ thuật điện,3
+SV20240140,student140,student140@university.edu.vn,Công nghệ thông tin,2
+SV20240565,student565,student565@university.edu.vn,Kỹ thuật điện,2
+SV20240928,student928,student928@university.edu.vn,Kinh tế,3
+SV20240233,student233,student233@university.edu.vn,Công nghệ thông tin,1
+SV20240915,student915,student915@university.edu.vn,Ngoại ngữ,2
+SV20240518,student518,student518@university.edu.vn,Kinh tế,3
+SV202401066,,student1066@university.edu.vn,Kinh tế,1
+SV20240247,student247,student247@university.edu.vn,Kinh tế,2
+SV20240349,student349,student349@university.edu.vn,Ngoại ngữ,3
+SV20240658,student658,student658@university.edu.vn,Kỹ thuật điện,2
+SV202401098,student1098,student081@university.edu.vn,Kinh tế,1
+SV20240775,student775,student775@university.edu.vn,Ngoại ngữ,2
+SV20240698,student698,student698@university.edu.vn,Kinh tế,3
+SV20240283,student283,student283@university.edu.vn,Ngoại ngữ,1
+SV20240664,student664,student664@university.edu.vn,Kinh tế,2
+SV20240715,student715,student715@university.edu.vn,Công nghệ thông tin,1
+SV20240320,student320,student320@university.edu.vn,Kỹ thuật điện,4
+SV20240430,student430,student430@university.edu.vn,Ngoại ngữ,4
+SV20240671,student671,student671@university.edu.vn,Kinh tế,3
+SV20240740,student740,student740@university.edu.vn,Kinh tế,2
+SV20240702,student702,student702@university.edu.vn,Ngoại ngữ,3
+SV20240776,student776,student776@university.edu.vn,Ngoại ngữ,3
+SV202401077,student1077,student1077@university.edu.vn,Ngoại ngữ,
+SV20240108,student108,student108@university.edu.vn,Công nghệ thông tin,1
+SV20240744,student744,student744@university.edu.vn,Kỹ thuật điện,1
+SV20240573,student573,student573@university.edu.vn,Ngoại ngữ,2
+SV20240926,student926,student926@university.edu.vn,Kỹ thuật điện,1
+SV20240510,student510,student510@university.edu.vn,Kinh tế,1
+SV20240581,student581,student581@university.edu.vn,Công nghệ thông tin,2
+SV20240846,student846,student846@university.edu.vn,Công nghệ thông tin,3
+SV20240904,student904,student904@university.edu.vn,Ngoại ngữ,4
+SV20240214,student214,student214@university.edu.vn,Kỹ thuật điện,3
+SV20240880,student880,student880@university.edu.vn,Công nghệ thông tin,4
+SV20240979,student979,student979@university.edu.vn,Kinh tế,3
+SV20240717,student717,student717@university.edu.vn,Kỹ thuật điện,1
+SV20240500,student500,student500@university.edu.vn,Kinh tế,4
+SV20240318,student318,student318@university.edu.vn,Ngoại ngữ,4
+SV20240945,student945,student945@university.edu.vn,Kỹ thuật điện,2
+SV20240148,student148,student148@university.edu.vn,Ngoại ngữ,3
+SV20240221,student221,student221@university.edu.vn,Công nghệ thông tin,1
+SV20240874,student874,student874@university.edu.vn,Kinh tế,4
+SV20240105,student105,student105@university.edu.vn,Ngoại ngữ,3
+SV20240910,student910,student910@university.edu.vn,Công nghệ thông tin,3
+SV202401028,student1028,student1028@university.edu.vn,Ngoại ngữ,2
+SV20240591,student591,student591@university.edu.vn,Ngoại ngữ,3
+SV20240456,student456,student456@university.edu.vn,Công nghệ thông tin,3
+SV20240566,student566,student566@university.edu.vn,Kinh tế,1
+SV20240331,student331,student331@university.edu.vn,Công nghệ thông tin,1
+SV20240705,student705,student705@university.edu.vn,Kinh tế,2
+SV20240678,student678,student678@university.edu.vn,Công nghệ thông tin,2
+SV20240666,student666,student666@university.edu.vn,Kinh tế,2
+SV20240211,student211,student211@university.edu.vn,Kinh tế,4
+SV20240856,student856,student856@university.edu.vn,Kỹ thuật điện,3
+SV20240319,student319,student319@university.edu.vn,Công nghệ thông tin,1
+SV20240577,student577,student577@university.edu.vn,Ngoại ngữ,1
+SV20240947,student947,student947@university.edu.vn,Kinh tế,3
+SV20240362,student362,student362@university.edu.vn,Công nghệ thông tin,2
+SV20240485,student485,student485@university.edu.vn,Kinh tế,3
+SV20240724,student724,student724@university.edu.vn,Kinh tế,1
+SV20240440,student440,student440@university.edu.vn,Ngoại ngữ,4
+SV20240907,student907,student907@university.edu.vn,Kinh tế,1
+SV20240537,student537,student537@university.edu.vn,Kinh tế,4
+SV20240877,student877,student877@university.edu.vn,Kỹ thuật điện,1
+SV20240694,student694,student694@university.edu.vn,Kỹ thuật điện,3
+SV202401058,student1058,student1058@outlook.com,Kỹ thuật điện,2
+SV20240519,student519,student519@university.edu.vn,Kỹ thuật điện,1
+SV20240193,student193,student193@university.edu.vn,Kỹ thuật điện,1
+SV20240179,student179,student179@university.edu.vn,Ngoại ngữ,2
+SV20240791,student791,student791@university.edu.vn,Kinh tế,2
+SV20240253,student253,student253@university.edu.vn,Công nghệ thông tin,4
+SV202401027,student1027,student1027@university.edu.vn,Ngoại ngữ,4
+SV20240559,student559,student559@university.edu.vn,Ngoại ngữ,1
+SV20240609,student609,student609@university.edu.vn,Ngoại ngữ,2
+SV20240230,student230,student230@university.edu.vn,Công nghệ thông tin,4
+SV20240703,student703,student703@university.edu.vn,Kinh tế,2
+SV20240720,student720,student720@university.edu.vn,Công nghệ thông tin,2
+SV20240647,student647,student647@university.edu.vn,Kinh tế,3
+SV20240872,student872,student872@university.edu.vn,Ngoại ngữ,4
+SV202401032,student1032,student1032@university.edu.vn,Ngoại ngữ,1
+SV20240292,student292,student292@university.edu.vn,Công nghệ thông tin,1
+SV20240513,student513,student513@university.edu.vn,Công nghệ thông tin,3
+SV202401092,student1092,student091@university.edu.vn,Kỹ thuật điện,2
+SV20240679,student679,student679@university.edu.vn,Kỹ thuật điện,4
+SV20240466,student466,student466@university.edu.vn,Kỹ thuật điện,4
+SV20240663,student663,student663@university.edu.vn,Công nghệ thông tin,4
+SV20240745,student745,student745@university.edu.vn,Công nghệ thông tin,1
+SV20240931,student931,student931@university.edu.vn,Ngoại ngữ,2
+SV20240766,student766,student766@university.edu.vn,Kỹ thuật điện,2
+SV20240595,student595,student595@university.edu.vn,Kinh tế,3
+SV20240546,student546,student546@university.edu.vn,Ngoại ngữ,2
+SV20240424,student424,student424@university.edu.vn,Kỹ thuật điện,4
+SV20240379,student379,student379@university.edu.vn,Ngoại ngữ,1
+SV202401065,student1065,student1065@outlook.com,Công nghệ thông tin,4
+SV20240832,student832,student832@university.edu.vn,Ngoại ngữ,3
+SV20240921,student921,student921@university.edu.vn,Kỹ thuật điện,2
+SV20240249,student249,student249@university.edu.vn,Ngoại ngữ,1
+SV20240503,student503,student503@university.edu.vn,Công nghệ thông tin,2
+SV20240778,student778,student778@university.edu.vn,Kỹ thuật điện,3
+SV20240738,student738,student738@university.edu.vn,Kinh tế,4
+SV20240597,student597,student597@university.edu.vn,Kỹ thuật điện,1
+SV20240426,student426,student426@university.edu.vn,Kinh tế,3
+SV20240218,student218,student218@university.edu.vn,Công nghệ thông tin,2
+SV20240367,student367,student367@university.edu.vn,Kỹ thuật điện,2
+SV20240680,student680,student680@university.edu.vn,Kinh tế,4
+SV20240275,student275,student275@university.edu.vn,Ngoại ngữ,4
+SV20240502,student502,student502@university.edu.vn,Ngoại ngữ,2
+SV20240850,student850,student850@university.edu.vn,Ngoại ngữ,4
+SV20240554,student554,student554@university.edu.vn,Ngoại ngữ,3
+SV20240542,student542,student542@university.edu.vn,Công nghệ thông tin,1
+SV20240869,student869,student869@university.edu.vn,Công nghệ thông tin,1
+SV20240327,student327,student327@university.edu.vn,Công nghệ thông tin,1
+SV20240436,student436,student436@university.edu.vn,Công nghệ thông tin,2
+SV202401070,student1070,student1070@university.edu.vn,Công nghệ thông tin,
+SV20240109,student109,student109@university.edu.vn,Công nghệ thông tin,2
+SV20240617,student617,student617@university.edu.vn,Kinh tế,4
+SV20240828,student828,student828@university.edu.vn,Công nghệ thông tin,1
+SV20240459,student459,student459@university.edu.vn,Ngoại ngữ,2
+SV20240365,student365,student365@university.edu.vn,Kinh tế,4
+SV202401081,,student1081@university.edu.vn,Kinh tế,4
+SV20240976,student976,student976@university.edu.vn,Ngoại ngữ,4
+SV20240128,student128,student128@university.edu.vn,Kinh tế,1
+SV20240935,student935,student935@university.edu.vn,Công nghệ thông tin,4
+SV20240558,student558,student558@university.edu.vn,Kỹ thuật điện,3
+SV202401023,student1023,student1023@university.edu.vn,Công nghệ thông tin,1
+SV20240276,student276,student276@university.edu.vn,Kinh tế,3
+SV20240527,student527,student527@university.edu.vn,Công nghệ thông tin,1
+SV20240377,student377,student377@university.edu.vn,Ngoại ngữ,3
+SV20240634,student634,student634@university.edu.vn,Ngoại ngữ,1
+SV20240169,student169,student169@university.edu.vn,Ngoại ngữ,3
+SV20240512,student512,student512@university.edu.vn,Công nghệ thông tin,3
+SV20240570,student570,student570@university.edu.vn,Ngoại ngữ,4
+SV20240343,student343,student343@university.edu.vn,Công nghệ thông tin,1
+SV20240627,student627,student627@university.edu.vn,Kỹ thuật điện,2
+SV20240934,student934,student934@university.edu.vn,Kinh tế,3
+SV20240645,student645,student645@university.edu.vn,Ngoại ngữ,3
+SV20240755,student755,student755@university.edu.vn,Công nghệ thông tin,1
+SV20240799,student799,student799@university.edu.vn,Công nghệ thông tin,4
+SV20240235,student235,student235@university.edu.vn,Kỹ thuật điện,2
+SV20240207,student207,student207@university.edu.vn,Kinh tế,3
+SV20240364,student364,student364@university.edu.vn,Ngoại ngữ,1
+SV20240305,student305,student305@university.edu.vn,Công nghệ thông tin,3
+SV202401046,student1046,student1046@university.edu.vn,Kinh tế,2
+SV20240469,student469,student469@university.edu.vn,Kỹ thuật điện,1
+SV20240538,student538,student538@university.edu.vn,Ngoại ngữ,1
+SV20240831,student831,student831@university.edu.vn,Ngoại ngữ,2
+SV20240130,student130,student130@university.edu.vn,Kỹ thuật điện,2
+SV20240752,student752,student752@university.edu.vn,Ngoại ngữ,2
+SV20240314,student314,student314@university.edu.vn,Công nghệ thông tin,3
+SV20240220,student220,student220@university.edu.vn,Kinh tế,4
+SV20240592,student592,student592@university.edu.vn,Kinh tế,2
+SV20240490,student490,student490@university.edu.vn,Kinh tế,2
+SV20240133,student133,student133@university.edu.vn,Ngoại ngữ,2
+SV20240847,student847,student847@university.edu.vn,Ngoại ngữ,2
+SV20240457,student457,student457@university.edu.vn,Công nghệ thông tin,4
+SV20240328,student328,student328@university.edu.vn,Kỹ thuật điện,3
+SV20240294,student294,student294@university.edu.vn,Kỹ thuật điện,1
+SV20240289,student289,student289@university.edu.vn,Kỹ thuật điện,1
+SV20240568,student568,student568@university.edu.vn,Ngoại ngữ,2
+SV20240682,student682,student682@university.edu.vn,Kinh tế,4
+SV20240676,student676,student676@university.edu.vn,Ngoại ngữ,2
+SV20240614,student614,student614@university.edu.vn,Kỹ thuật điện,3
+SV20240784,student784,student784@university.edu.vn,Ngoại ngữ,4
+SV20240992,student992,student992@university.edu.vn,Kinh tế,1
+SV20240687,student687,student687@university.edu.vn,Kỹ thuật điện,1
+SV20240483,student483,student483@university.edu.vn,Ngoại ngữ,3
+SV20240335,student335,student335@university.edu.vn,Kỹ thuật điện,4
+SV20240734,student734,student734@university.edu.vn,Kinh tế,4
+SV20240773,student773,student773@university.edu.vn,Kỹ thuật điện,1
+SV20240786,student786,student786@university.edu.vn,Kỹ thuật điện,3
+SV20240298,student298,student298@university.edu.vn,Công nghệ thông tin,3
+SV20240912,student912,student912@university.edu.vn,Ngoại ngữ,3
+SV20240549,student549,student549@university.edu.vn,Kinh tế,4
+SV20240765,student765,student765@university.edu.vn,Kỹ thuật điện,2
+SV20240450,student450,student450@university.edu.vn,Kỹ thuật điện,2
+SV20240260,student260,student260@university.edu.vn,Công nghệ thông tin,1
+SV20240790,student790,student790@university.edu.vn,Kỹ thuật điện,1
+SV20240835,student835,student835@university.edu.vn,Công nghệ thông tin,1
+SV20240162,student162,student162@university.edu.vn,Ngoại ngữ,4
+SV202401094,student1094,student069@university.edu.vn,Kinh tế,3
+SV20240375,student375,student375@university.edu.vn,Kinh tế,3
+SV20240922,student922,student922@university.edu.vn,Kỹ thuật điện,1
+SV20240884,student884,student884@university.edu.vn,Kỹ thuật điện,2
+SV202401015,student1015,student1015@university.edu.vn,Kỹ thuật điện,1
+SV20240234,student234,student234@university.edu.vn,Kinh tế,2
+SV20240991,student991,student991@university.edu.vn,Kỹ thuật điện,4
+SV20240886,student886,student886@university.edu.vn,Công nghệ thông tin,1
+SV20240189,student189,student189@university.edu.vn,Kỹ thuật điện,4
+SV20240127,student127,student127@university.edu.vn,Ngoại ngữ,2
+SV20240464,student464,student464@university.edu.vn,Kỹ thuật điện,1
+SV20240552,student552,student552@university.edu.vn,Công nghệ thông tin,3
+SV20240851,student851,student851@university.edu.vn,Kinh tế,2
+SV20240222,student222,student222@university.edu.vn,Kinh tế,4
+SV20240268,student268,student268@university.edu.vn,Kỹ thuật điện,1
+SV20240501,student501,student501@university.edu.vn,Công nghệ thông tin,3
+SV20240291,student291,student291@university.edu.vn,Kinh tế,4
+SV20240900,student900,student900@university.edu.vn,Kỹ thuật điện,1
+SV20240737,student737,student737@university.edu.vn,Công nghệ thông tin,3
+SV20240555,student555,student555@university.edu.vn,Kỹ thuật điện,1
+SV20240506,student506,student506@university.edu.vn,Công nghệ thông tin,3
+SV20240824,student824,student824@university.edu.vn,Kỹ thuật điện,1
+SV20240507,student507,student507@university.edu.vn,Kinh tế,2
+SV20240604,student604,student604@university.edu.vn,Công nghệ thông tin,2
+SV20240143,student143,student143@university.edu.vn,Ngoại ngữ,3
+SV20240409,student409,student409@university.edu.vn,Ngoại ngữ,1
+SV20240983,student983,student983@university.edu.vn,Công nghệ thông tin,3
+SV20240175,student175,student175@university.edu.vn,Công nghệ thông tin,2
+SV20240521,student521,student521@university.edu.vn,Công nghệ thông tin,2
+SV20240969,student969,student969@university.edu.vn,Kinh tế,1
+SV20240261,student261,student261@university.edu.vn,Kinh tế,3
+SV20240821,student821,student821@university.edu.vn,Công nghệ thông tin,1
+SV20240322,student322,student322@university.edu.vn,Công nghệ thông tin,3
+SV20240911,student911,student911@university.edu.vn,Công nghệ thông tin,2
+SV20240209,student209,student209@university.edu.vn,Kỹ thuật điện,4
+SV20240917,student917,student917@university.edu.vn,Ngoại ngữ,1
+SV20240223,student223,student223@university.edu.vn,Kỹ thuật điện,2
+SV20240896,student896,student896@university.edu.vn,Kinh tế,2
+SV20240241,student241,student241@university.edu.vn,Ngoại ngữ,4
+SV202401034,student1034,student1034@university.edu.vn,Kinh tế,2
+SV20240965,student965,student965@university.edu.vn,Kinh tế,2
+SV20240589,student589,student589@university.edu.vn,Ngoại ngữ,1
+SV20240492,student492,student492@university.edu.vn,Kinh tế,1
+SV202401095,student1095,student085@university.edu.vn,Công nghệ thông tin,2
+SV20240914,student914,student914@university.edu.vn,Công nghệ thông tin,3
+SV20240714,student714,student714@university.edu.vn,Ngoại ngữ,4
+SV202401026,student1026,student1026@university.edu.vn,Ngoại ngữ,3
+SV20240523,student523,student523@university.edu.vn,Ngoại ngữ,4
+SV20240732,student732,student732@university.edu.vn,Công nghệ thông tin,1
+SV20240958,student958,student958@university.edu.vn,Kỹ thuật điện,4
+SV20240495,student495,student495@university.edu.vn,Kinh tế,2
+SV20240138,student138,student138@university.edu.vn,Kỹ thuật điện,1
+SV20240308,student308,student308@university.edu.vn,Ngoại ngữ,4
+SV20240692,student692,student692@university.edu.vn,Ngoại ngữ,1
+SV20240389,student389,student389@university.edu.vn,Công nghệ thông tin,1
+SV20240378,student378,student378@university.edu.vn,Kỹ thuật điện,2
+SV20240540,student540,student540@university.edu.vn,Kinh tế,3
+SV20240826,student826,student826@university.edu.vn,Kinh tế,1
+SV20240392,student392,student392@university.edu.vn,Ngoại ngữ,1
+SV20240475,student475,student475@university.edu.vn,Công nghệ thông tin,4
+SV20240401,student401,student401@university.edu.vn,Công nghệ thông tin,3
+SV20240124,student124,student124@university.edu.vn,Ngoại ngữ,3
+SV202401053,student1053,student1053@outlook.com,Kỹ thuật điện,3
+SV20240864,student864,student864@university.edu.vn,Kinh tế,1
+SV202401097,student1097,student096@university.edu.vn,Công nghệ thông tin,1
+SV20240789,student789,student789@university.edu.vn,Kỹ thuật điện,1
+SV202401056,student1056,student1056@outlook.com,Công nghệ thông tin,1
+SV202401011,student1011,student1011@university.edu.vn,Ngoại ngữ,4
+SV202401002,student1002,student1002@university.edu.vn,Ngoại ngữ,3
+SV20240564,student564,student564@university.edu.vn,Kinh tế,4
+SV20240941,student941,student941@university.edu.vn,Kinh tế,4
+SV20240242,student242,student242@university.edu.vn,Ngoại ngữ,2
+SV20240156,student156,student156@university.edu.vn,Ngoại ngữ,1
+SV20240742,student742,student742@university.edu.vn,Công nghệ thông tin,1
+SV20240893,student893,student893@university.edu.vn,Ngoại ngữ,2
+SV20240273,student273,student273@university.edu.vn,Công nghệ thông tin,1
+SV20240427,student427,student427@university.edu.vn,Công nghệ thông tin,2
+SV20240898,student898,student898@university.edu.vn,Ngoại ngữ,2
+SV20240761,student761,student761@university.edu.vn,Ngoại ngữ,1
+SV20240163,student163,student163@university.edu.vn,Kỹ thuật điện,3
+SV20240339,student339,student339@university.edu.vn,Ngoại ngữ,2
+SV20240173,student173,student173@university.edu.vn,Kỹ thuật điện,3
+SV20240575,student575,student575@university.edu.vn,Ngoại ngữ,3
+SV20240499,student499,student499@university.edu.vn,Công nghệ thông tin,4
+SV20240800,student800,student800@university.edu.vn,Công nghệ thông tin,3
+SV20240894,student894,student894@university.edu.vn,Kỹ thuật điện,1
+SV20240248,student248,student248@university.edu.vn,Kinh tế,2
+SV20240767,student767,student767@university.edu.vn,Kinh tế,1
+SV20240317,student317,student317@university.edu.vn,Kỹ thuật điện,4
+SV20240638,student638,student638@university.edu.vn,Kỹ thuật điện,4
+SV20240452,student452,student452@university.edu.vn,Ngoại ngữ,2
+SV20240636,student636,student636@university.edu.vn,Ngoại ngữ,3
+SV20240760,student760,student760@university.edu.vn,Công nghệ thông tin,2
+SV20240470,student470,student470@university.edu.vn,Kinh tế,3
+SV20240315,student315,student315@university.edu.vn,Kỹ thuật điện,4
+SV20240304,student304,student304@university.edu.vn,Kinh tế,1
+SV202401039,student1039,student1039@university.edu.vn,Kỹ thuật điện,2
+SV20240151,student151,student151@university.edu.vn,Ngoại ngữ,1
+SV20240191,student191,student191@university.edu.vn,Công nghệ thông tin,2
+SV20240758,student758,student758@university.edu.vn,Ngoại ngữ,2
+SV20240404,student404,student404@university.edu.vn,Kỹ thuật điện,3
+SV20240182,student182,student182@university.edu.vn,Kỹ thuật điện,1
+SV20240516,student516,student516@university.edu.vn,Kỹ thuật điện,4
+SV20240838,student838,student838@university.edu.vn,Ngoại ngữ,3
+SV20240863,student863,student863@university.edu.vn,Kỹ thuật điện,1
+SV20240962,student962,student962@university.edu.vn,Kinh tế,3
+SV20240889,student889,student889@university.edu.vn,Ngoại ngữ,1
+SV20240333,student333,student333@university.edu.vn,Kỹ thuật điện,3
+SV20240370,student370,student370@university.edu.vn,Kỹ thuật điện,2
+SV20240363,student363,student363@university.edu.vn,Kinh tế,2
+SV20240739,student739,student739@university.edu.vn,Kỹ thuật điện,1
+SV20240543,student543,student543@university.edu.vn,Kinh tế,4
+SV20240753,student753,student753@university.edu.vn,Kinh tế,2
+SV202401071,student1071,,Kỹ thuật điện,3
+SV20240448,student448,student448@university.edu.vn,Kỹ thuật điện,4
+SV20240167,student167,student167@university.edu.vn,Ngoại ngữ,1
+SV20240411,student411,student411@university.edu.vn,Ngoại ngữ,1
+SV20240184,student184,student184@university.edu.vn,Công nghệ thông tin,3
+SV20240208,student208,student208@university.edu.vn,Kinh tế,3
+SV20240955,student955,student955@university.edu.vn,Kinh tế,3
+SV20240347,student347,student347@university.edu.vn,Ngoại ngữ,2
+SV20240876,student876,student876@university.edu.vn,Ngoại ngữ,3
+SV20240192,student192,student192@university.edu.vn,Công nghệ thông tin,3
+SV20240368,student368,student368@university.edu.vn,Kinh tế,1
+SV20240553,student553,student553@university.edu.vn,Kinh tế,1
+SV20240691,student691,student691@university.edu.vn,Công nghệ thông tin,2
+SV20240142,student142,student142@university.edu.vn,Ngoại ngữ,1
+SV20240950,student950,student950@university.edu.vn,Công nghệ thông tin,1
+SV20240313,student313,student313@university.edu.vn,Công nghệ thông tin,2
+SV20240919,student919,student919@university.edu.vn,Kinh tế,4
+SV20240933,student933,student933@university.edu.vn,Công nghệ thông tin,3
+SV202401080,student1080,,Kinh tế,1
+SV20240749,student749,student749@university.edu.vn,Công nghệ thông tin,1
+SV20240524,student524,student524@university.edu.vn,Kỹ thuật điện,3
+SV20240978,student978,student978@university.edu.vn,Kinh tế,3
+SV20240240,student240,student240@university.edu.vn,Kinh tế,1
+SV20240990,student990,student990@university.edu.vn,Kinh tế,3
+SV20240769,student769,student769@university.edu.vn,Công nghệ thông tin,2
+SV20240146,student146,student146@university.edu.vn,Ngoại ngữ,1
+SV20240853,student853,student853@university.edu.vn,Ngoại ngữ,4
+SV20240129,student129,student129@university.edu.vn,Ngoại ngữ,3
+SV202401074,student1074,student1074@university.edu.vn,Kinh tế,
+SV20240759,student759,student759@university.edu.vn,Kinh tế,2
+SV20240973,student973,student973@university.edu.vn,Kinh tế,3
+SV20240625,student625,student625@university.edu.vn,Công nghệ thông tin,3
+SV20240381,student381,student381@university.edu.vn,Công nghệ thông tin,2
+SV20240956,student956,student956@university.edu.vn,Ngoại ngữ,2
+SV20240583,student583,student583@university.edu.vn,Kỹ thuật điện,2
+SV20240613,student613,student613@university.edu.vn,Kỹ thuật điện,1
+SV20240342,student342,student342@university.edu.vn,Kỹ thuật điện,1
+SV20240442,student442,student442@university.edu.vn,Kỹ thuật điện,1
+SV20240266,student266,student266@university.edu.vn,Kỹ thuật điện,3
+SV20240794,student794,student794@university.edu.vn,Kỹ thuật điện,4
+SV20240350,student350,student350@university.edu.vn,Kinh tế,1
+SV20240977,student977,student977@university.edu.vn,Kỹ thuật điện,2
+SV20240431,student431,student431@university.edu.vn,Kinh tế,4
+SV20240174,student174,student174@university.edu.vn,Công nghệ thông tin,2
+SV20240711,student711,student711@university.edu.vn,Kỹ thuật điện,2
+SV202401059,student1059,student1059@gmail.com,Ngoại ngữ,2
+SV20240451,student451,student451@university.edu.vn,Kỹ thuật điện,1
+SV20240439,student439,student439@university.edu.vn,Công nghệ thông tin,2
+SV20240637,student637,student637@university.edu.vn,Kỹ thuật điện,4
+SV20240807,student807,student807@university.edu.vn,Ngoại ngữ,1
+SV20240200,student200,student200@university.edu.vn,Ngoại ngữ,3
+SV20240514,student514,student514@university.edu.vn,Công nghệ thông tin,4
+SV20240716,student716,student716@university.edu.vn,Công nghệ thông tin,4
+SV20240445,student445,student445@university.edu.vn,Kinh tế,1
+SV20240340,student340,student340@university.edu.vn,Công nghệ thông tin,1
+SV20240662,student662,student662@university.edu.vn,Công nghệ thông tin,1
+SV20240607,student607,student607@university.edu.vn,Công nghệ thông tin,2
+SV20240351,student351,student351@university.edu.vn,Kinh tế,3
+SV20240212,student212,student212@university.edu.vn,Kỹ thuật điện,2
+SV20240736,student736,student736@university.edu.vn,Kinh tế,1
+SV20240160,student160,student160@university.edu.vn,Kinh tế,2
+SV202401042,student1042,student1042@university.edu.vn,Ngoại ngữ,3
+SV20240337,student337,student337@university.edu.vn,Ngoại ngữ,2
+SV20240446,student446,student446@university.edu.vn,Kinh tế,1
+SV20240486,student486,student486@university.edu.vn,Công nghệ thông tin,2
+SV20240281,student281,student281@university.edu.vn,Kỹ thuật điện,1
+SV20240579,student579,student579@university.edu.vn,Ngoại ngữ,2
+SV20240239,student239,student239@university.edu.vn,Ngoại ngữ,2
+SV20240358,student358,student358@university.edu.vn,Công nghệ thông tin,2
+SV20240598,student598,student598@university.edu.vn,Kỹ thuật điện,1
+SV20240998,student998,student998@university.edu.vn,Kinh tế,1
+SV20240136,student136,student136@university.edu.vn,Ngoại ngữ,4
+SV20240531,student531,student531@university.edu.vn,Kỹ thuật điện,1
+SV20240300,student300,student300@university.edu.vn,Kỹ thuật điện,4
+SV20240219,student219,student219@university.edu.vn,Kỹ thuật điện,4
+SV20240726,student726,student726@university.edu.vn,Kỹ thuật điện,2
+SV20240902,student902,student902@university.edu.vn,Kinh tế,2
+SV20240865,student865,student865@university.edu.vn,Công nghệ thông tin,3
+SV20240890,student890,student890@university.edu.vn,Ngoại ngữ,1
+SV20240788,student788,student788@university.edu.vn,Công nghệ thông tin,1
+SV20240479,student479,student479@university.edu.vn,Kinh tế,2
+SV20240323,student323,student323@university.edu.vn,Kỹ thuật điện,2
+SV20240329,student329,student329@university.edu.vn,Công nghệ thông tin,3
+SV20240202,student202,student202@university.edu.vn,Ngoại ngữ,4
+SV20240371,student371,student371@university.edu.vn,Kỹ thuật điện,4
+SV20240688,student688,student688@university.edu.vn,Kỹ thuật điện,3
+SV20240357,student357,student357@university.edu.vn,Kỹ thuật điện,1
+SV20240195,student195,student195@university.edu.vn,Công nghệ thông tin,4
+SV20240437,student437,student437@university.edu.vn,Ngoại ngữ,1
+SV20240102,student102,student102@university.edu.vn,Ngoại ngữ,4
+SV20240454,student454,student454@university.edu.vn,Kỹ thuật điện,2
+SV20240722,student722,student722@university.edu.vn,Công nghệ thông tin,2
+SV20240383,student383,student383@university.edu.vn,Kỹ thuật điện,4
+SV202401100,student1100,student029@university.edu.vn,Kinh tế,4
+SV20240708,student708,student708@university.edu.vn,Công nghệ thông tin,4
+SV20240596,student596,student596@university.edu.vn,Kinh tế,1
+SV20240642,student642,student642@university.edu.vn,Công nghệ thông tin,2
+SV20240394,student394,student394@university.edu.vn,Công nghệ thông tin,1
+SV20240277,student277,student277@university.edu.vn,Kinh tế,2
+SV20240489,student489,student489@university.edu.vn,Kinh tế,4
+SV20240927,student927,student927@university.edu.vn,Kỹ thuật điện,4
+SV20240245,student245,student245@university.edu.vn,Kinh tế,1
+SV20240398,student398,student398@university.edu.vn,Kinh tế,3
+SV20240639,student639,student639@university.edu.vn,Công nghệ thông tin,4
+SV20240964,student964,student964@university.edu.vn,Công nghệ thông tin,1
+SV20240433,student433,student433@university.edu.vn,Kỹ thuật điện,4
+SV20240855,student855,student855@university.edu.vn,Ngoại ngữ,2
+SV20240215,student215,student215@university.edu.vn,Ngoại ngữ,4
+SV20240849,student849,student849@university.edu.vn,Kinh tế,3
+SV20240815,student815,student815@university.edu.vn,Kỹ thuật điện,2
+SV20240473,student473,student473@university.edu.vn,Kinh tế,3
+SV20240754,student754,student754@university.edu.vn,Ngoại ngữ,4
+SV20240615,student615,student615@university.edu.vn,Kỹ thuật điện,1
+SV202401088,student1088,student025@university.edu.vn,Công nghệ thông tin,1
+SV20240303,student303,student303@university.edu.vn,Công nghệ thông tin,3
+SV20240413,student413,student413@university.edu.vn,Công nghệ thông tin,3
+SV20240862,student862,student862@university.edu.vn,Ngoại ngữ,4
+SV20240330,student330,student330@university.edu.vn,Ngoại ngữ,3
+SV20240482,student482,student482@university.edu.vn,Kinh tế,4
+SV20240624,student624,student624@university.edu.vn,Ngoại ngữ,4
+SV20240311,student311,student311@university.edu.vn,Kỹ thuật điện,3
+SV202401061,student1061,student1061@yahoo.com,Kinh tế,3
+SV20240610,student610,student610@university.edu.vn,Kỹ thuật điện,4
+SV20240434,student434,student434@university.edu.vn,Công nghệ thông tin,4
+SV20240541,student541,student541@university.edu.vn,Công nghệ thông tin,4
+SV20240792,student792,student792@university.edu.vn,Ngoại ngữ,2
+SV20240393,student393,student393@university.edu.vn,Công nghệ thông tin,4
+SV20240478,student478,student478@university.edu.vn,Kinh tế,2
+SV202401073,student1073,,Kinh tế,3
+SV20240420,student420,student420@university.edu.vn,Công nghệ thông tin,2
+SV20240675,student675,student675@university.edu.vn,Công nghệ thông tin,1
+SV20240608,student608,student608@university.edu.vn,Ngoại ngữ,4
+SV20240999,student999,student999@university.edu.vn,Kỹ thuật điện,4
+SV20240139,student139,student139@university.edu.vn,Kinh tế,3
+SV202401024,student1024,student1024@university.edu.vn,Ngoại ngữ,1
+SV20240814,student814,student814@university.edu.vn,Kỹ thuật điện,1
+SV202401064,student1064,student1064@yahoo.com,Kỹ thuật điện,2
+SV20240525,student525,student525@university.edu.vn,Kinh tế,1
+SV20240841,student841,student841@university.edu.vn,Công nghệ thông tin,2
+SV20240827,student827,student827@university.edu.vn,Kinh tế,4
+SV20240746,student746,student746@university.edu.vn,Công nghệ thông tin,3
+SV20240262,student262,student262@university.edu.vn,Kỹ thuật điện,2
+SV20240533,student533,student533@university.edu.vn,Kỹ thuật điện,1
+SV20240809,student809,student809@university.edu.vn,Kỹ thuật điện,1
+SV20240352,student352,student352@university.edu.vn,Kỹ thuật điện,3
+student1076,student1076@university.edu.vn,Công nghệ thông tin,4
+SV202401001,student1001,student1001@university.edu.vn,Công nghệ thông tin,4
+SV20240332,student332,student332@university.edu.vn,Công nghệ thông tin,1
+SV20240287,student287,student287@university.edu.vn,Ngoại ngữ,4
+SV20240837,student837,student837@university.edu.vn,Kinh tế,2
+SV20240481,student481,student481@university.edu.vn,Kỹ thuật điện,1
+SV20240818,student818,student818@university.edu.vn,Ngoại ngữ,1
+SV20240873,student873,student873@university.edu.vn,Công nghệ thông tin,3
+SV20240567,student567,student567@university.edu.vn,Công nghệ thông tin,4
+SV20240780,student780,student780@university.edu.vn,Công nghệ thông tin,4
+SV202401048,student1048,student1048@university.edu.vn,Công nghệ thông tin,1
+SV20240584,student584,student584@university.edu.vn,Công nghệ thông tin,4
+SV20240763,student763,student763@university.edu.vn,Công nghệ thông tin,3
+SV20240844,student844,student844@university.edu.vn,Kỹ thuật điện,4
+SV20240937,student937,student937@university.edu.vn,Kỹ thuật điện,4
+SV20240522,student522,student522@university.edu.vn,Kinh tế,3

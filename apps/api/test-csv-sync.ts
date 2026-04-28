@@ -7,10 +7,17 @@ const csvImportQueue = new Queue("csv-import-queue", { connection: redis });
 
 async function triggerJob() {
   console.log("🚀 Đang gửi yêu cầu trigger Job CsvImportWorker...");
-  await csvImportQueue.add("import-csv-job", {});
-  console.log("✅ Đã đưa job vào hàng đợi thành công!");
+  const files = [
+    "data/students.csv",
+  ];
+
+  for (const file of files) {
+    await csvImportQueue.add("import-csv-job", { filePath: file });
+    console.log(`✅ Đã đưa job cho file ${file} vào hàng đợi thành công!`);
+  }
+
   console.log("👉 Hãy xem log ở Terminal đang chạy 'npm run dev:api' để thấy kết quả.");
-  
+
   // Đóng connection để script thoát
   setTimeout(() => {
     redis.quit();
