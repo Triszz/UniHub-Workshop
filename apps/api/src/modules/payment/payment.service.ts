@@ -4,6 +4,7 @@ import { prisma } from "../../shared/database/prisma";
 import { redis } from "../../shared/redis/client";
 import * as CircuitBreaker from "../../shared/circuit-breaker/circuit-breaker";
 import { GatewayResponse, IdempotencyCache } from "./payment.types";
+import { enqueueRegistrationNotifications } from "../notification/notification.scheduler";
 import { QrPayload } from "../registration/registration.types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -82,7 +83,9 @@ export const processPayment = async (
           title: true,
           price: true,
           startsAt: true,
+          endsAt: true,
           status: true,
+          room: { select: { name: true, building: true } },
         },
       },
       payment: true,
@@ -254,10 +257,13 @@ export const processPayment = async (
     });
   }
 
-  // ── 7. Enqueue notification ───────────────────────────────────────────────
-  // TODO Ngày 9: thay bằng queue.add(...)
-  console.log(
-    `[TODO] Enqueue notification: payment_completed — user ${userId}, workshop ${registration.workshop.id}`,
+  await enqueueRegistrationNotifications(
+    {
+      registrationId,
+      userId,
+      workshop: registration.workshop,
+    },
+    { includeRegistrationSuccess: true },
   );
 
   return {

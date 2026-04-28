@@ -7,7 +7,7 @@ import {
   WorkshopRegistrationListQuery,
   WorkshopListQuery,
 } from "./workshop.types";
-import { notificationQueue } from "../../workers/notification.worker";
+import { notificationQueue } from "../notification/notification.queue";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

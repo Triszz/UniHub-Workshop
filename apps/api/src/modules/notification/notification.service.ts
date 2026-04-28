@@ -25,6 +25,10 @@ export class NotificationService {
    */
   async getActiveChannelsForUser(userId: string, type: string): Promise<string[]> {
     // Tương lai có thể kiểm tra preferences của user
+    if (type === 'registration_lifecycle') {
+      return ['in_app'];
+    }
+
     return ['email', 'in_app'];
   }
 
