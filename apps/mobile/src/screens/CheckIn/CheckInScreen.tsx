@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import * as Haptics from "expo-haptics";
+import { Audio } from "expo-av";
 import NetInfo from "@react-native-community/netinfo";
 import { useAuth } from "../../contexts/AuthContext";
 import { checkinDB } from "../../services/offlineSync/checkinDatabase";
@@ -19,6 +20,95 @@ import { api } from "../../services/api";
 
 
 const { width } = Dimensions.get("window");
+
+// Sound instance for QR scan feedback
+let scanSound: Audio.Sound | null = null;
+
+// Initialize sound on app start
+const initializeSound = async () => {
+  try {
+    // Set audio mode for sound effects
+    await Audio.setAudioModeAsync({
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: false,
+      shouldDuckAndroid: false,
+    });
+
+    // Load sound file
+    const { sound } = await Audio.Sound.createAsync(
+      require("../../../assets/sounds/tic-tic.mp3"),
+      { shouldPlay: false }
+    );
+    scanSound = sound;
+    console.log("🔊 Scan sound loaded successfully");
+  } catch (error) {
+    console.warn(
+      "⚠️ Could not load scan sound file, using vibration fallback",
+      error
+    );
+  }
+};
+
+// Sound feedback function - "tic tic" từ sound file
+const playScanSound = async () => {
+  try {
+    // Try to play sound file first
+    if (scanSound) {
+      await scanSound.setPositionAsync(0); // Reset to beginning
+      await scanSound.playAsync();
+      console.log("🔊 Playing tic-tic sound from file");
+    } else {
+      // Fallback to Web Audio API (for web)
+      if (typeof window !== 'undefined' && window.AudioContext) {
+        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+        // First beep
+        const oscillator1 = audioContext.createOscillator();
+        const gainNode1 = audioContext.createGain();
+
+        oscillator1.connect(gainNode1);
+        gainNode1.connect(audioContext.destination);
+
+        oscillator1.frequency.setValueAtTime(800, audioContext.currentTime);
+        oscillator1.type = 'sine';
+        gainNode1.gain.setValueAtTime(0.1, audioContext.currentTime);
+        gainNode1.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+
+        oscillator1.start(audioContext.currentTime);
+        oscillator1.stop(audioContext.currentTime + 0.1);
+
+        // Second beep (tic-tic)
+        setTimeout(() => {
+          const oscillator2 = audioContext.createOscillator();
+          const gainNode2 = audioContext.createGain();
+
+          oscillator2.connect(gainNode2);
+          gainNode2.connect(audioContext.destination);
+
+          oscillator2.frequency.setValueAtTime(800, audioContext.currentTime);
+          oscillator2.type = 'sine';
+          gainNode2.gain.setValueAtTime(0.1, audioContext.currentTime);
+          gainNode2.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+
+          oscillator2.start(audioContext.currentTime);
+          oscillator2.stop(audioContext.currentTime + 0.1);
+        }, 150);
+
+        console.log("🔊 Playing generated tic-tic sound");
+      } else {
+        // Final fallback: vibration
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        setTimeout(() => {
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }, 100);
+        console.log("📳 Using vibration fallback");
+      }
+    }
+  } catch (error) {
+    // Final fallback
+    console.log("🔊 Scan sound feedback");
+  }
+};
 
 interface ScanResult {
   data: string;
@@ -49,18 +139,21 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
 
         // Get device ID
         const deviceId = await deviceIdManager.getDeviceId();
-        console.log("✅ Device initialized with ID:", deviceId);
+        console.log("Device initialized with ID:", deviceId);
+
+        // Initialize sound for QR scanning feedback
+        await initializeSound();
 
         // Monitor network status
         const unsubscribe = NetInfo.addEventListener((state) => {
           const online =
             state.type !== "none" && state.isConnected === true;
           setIsOnline(online);
-          console.log("🌐 Network status:", online ? "Online" : "Offline");
+          console.log("Network status:", online ? "Online" : "Offline");
 
           // Sync when coming back online
           if (online && pendingCount > 0) {
-            console.log("🔄 Network restored, attempting sync...");
+            console.log("Network restored, attempting sync...");
             checkinSyncManager.syncWhenOnline();
           }
         });
@@ -78,6 +171,12 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
       unsubscribeInit.then((unsub) => unsub?.());
       checkinSyncManager.destroy();
       checkinDB.close();
+
+      // Cleanup sound
+      if (scanSound) {
+        scanSound.unloadAsync();
+        scanSound = null;
+      }
     };
   }, []);
 
@@ -111,6 +210,9 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
     ) {
       return;
     }
+
+    // Play "tic tic" sound khi scan QR
+    await playScanSound();
 
     setLastScanned(scannedData);
     setIsScanning(false);
@@ -165,7 +267,7 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
         now
       );
 
-      console.log("💾 Saved to local database");
+      // console.log(" Saved to local database");
 
       // 6. Try online check-in if connected
       let studentName = "Sinh viên";
@@ -210,7 +312,8 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
         setLastResult(null);
       }, 1500);
     } catch (error: any) {
-      console.error("❌ Check-in failed:", error);
+      // Log friendly message instead of ugly error
+      console.warn(" QR scan failed:", error.message);
 
       await Haptics.notificationAsync(
         Haptics.NotificationFeedbackType.Error
@@ -218,7 +321,7 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
 
       setLastResult({
         type: "error",
-        message: error.message || "❌ Invalid QR code",
+        message: error.message || " Invalid QR code",
       });
 
       // Reset after 2 seconds
@@ -365,7 +468,7 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
             style={[styles.button, styles.logoutButton]}
             onPress={handleLogout}
           >
-            <Text style={styles.buttonText}>🚪 Logout</Text>
+            <Text style={styles.buttonText}> Logout</Text>
           </TouchableOpacity>
         </View>
       </View>
