@@ -36,7 +36,7 @@ const generateQrCode = (
 
 // ─── Service: POST /registrations ────────────────────────────────────────────
 
-export const registerFree = async (userId: string, workshopId: string) => {
+export const register = async (userId: string, workshopId: string) => {
   // ── Bước 1: Validate workshop ───────────────────────────────────────────────
   const workshop = await prisma.workshop.findUnique({
     where: { id: workshopId },
@@ -61,23 +61,35 @@ export const registerFree = async (userId: string, workshopId: string) => {
     throw appError("Workshop đã kết thúc, không thể đăng ký.", 400);
   }
 
-  if (Number(workshop.price) > 0) {
-    throw appError(
-      "Workshop này có phí. Vui lòng sử dụng luồng thanh toán.",
-      400,
-    );
-  }
+  const isPaid = Number(workshop.price) > 0;
 
   // ── Bước 2: Kiểm tra đã đăng ký chưa ──────────────────────────────────────
   const existingReg = await prisma.registration.findUnique({
     where: { userId_workshopId: { userId, workshopId } },
   });
 
+  // ── Duplicate handling ────────────────────────────────────────────────────
   if (existingReg && existingReg.status !== "cancelled") {
+    // Paid workshop: pending or confirmed/checked_in → trả checkoutUrl hoặc registration
+    if (isPaid) {
+      if (existingReg.status === "pending") {
+        // Trả checkoutUrl để user tiếp tục checkout
+        return {
+          registration: existingReg,
+          checkoutUrl: `/checkout/${existingReg.id}`,
+        };
+      }
+      // confirmed / checked_in → trả registration hiện có
+      return { registration: existingReg };
+    }
+    // Free workshop: giữ rule 409
     throw appError("Bạn đã đăng ký workshop này rồi.", 409);
   }
 
-  // ── Bước 3: DB Transaction với SELECT FOR UPDATE ──────────────────────────
+  // ── Bước 3: Determine target status ─────────────────────────────────────────
+  const targetStatus = isPaid ? "pending" : "confirmed";
+
+  // ── Bước 4: DB Transaction với SELECT FOR UPDATE ──────────────────────────
   //
   // KHÔNG dùng Redis distributed lock vì:
   //   - Lock chỉ cho 1 request qua tại một thời điểm → bottleneck nghiêm trọng
@@ -117,15 +129,16 @@ export const registerFree = async (userId: string, workshopId: string) => {
       if (existingReg?.status === "cancelled") {
         reg = await tx.registration.update({
           where: { id: existingReg.id },
-          data: { status: "confirmed", qrCode: null },
+          data: { status: targetStatus, qrCode: null },
         });
       } else {
         reg = await tx.registration.create({
-          data: { userId, workshopId, status: "confirmed" },
+          data: { userId, workshopId, status: targetStatus },
         });
       }
 
-      // Tăng registeredCount trong cùng transaction — atomic
+      // Seat hold: tăng registeredCount trong cùng transaction — atomic
+      // (áp dụng cho cả paid pending và free confirmed)
       await tx.workshop.update({
         where: { id: workshopId },
         data: { registeredCount: { increment: 1 } },
@@ -140,28 +153,47 @@ export const registerFree = async (userId: string, workshopId: string) => {
     },
   );
 
-  // ── Bước 4: Sinh QR code (ngoài transaction) ───────────────────────────────
-  const qrCode = generateQrCode(
-    registration.id,
-    workshopId,
-    userId,
-    workshop.startsAt,
-  );
+  // ── Bước 5: For free workshop, sinh QR code (ngoài transaction) ───────────────────────────────
+  if (!isPaid) {
+    const qrCode = generateQrCode(
+      registration.id,
+      workshopId,
+      userId,
+      workshop.startsAt,
+    );
 
-  const updatedReg = await prisma.registration.update({
-    where: { id: registration.id },
-    data: { qrCode },
-    select: { id: true, status: true, qrCode: true, createdAt: true },
-  });
+    const updatedReg = await prisma.registration.update({
+      where: { id: registration.id },
+      data: { qrCode },
+      select: { id: true, status: true, qrCode: true, createdAt: true },
+    });
 
-  // ── Bước 5: Enqueue notification (TODO Ngày 9) ────────────────────────────
-  console.log(
-    `[TODO] Enqueue notification: registration_confirmed — user ${userId}, workshop ${workshopId}`,
-  );
+    // ── Enqueue notification (TODO Ngày 9) ─────────────────────────────────
+    console.log(
+      `[TODO] Enqueue notification: registration_confirmed — user ${userId}, workshop ${workshopId}`,
+    );
 
+    return {
+      registration: {
+        ...updatedReg,
+        workshop: {
+          id: workshop.id,
+          title: workshop.title,
+          startsAt: workshop.startsAt,
+          endsAt: workshop.endsAt,
+          room: workshop.room,
+        },
+      },
+    };
+  }
+
+  // ── Bước 6: For paid workshop, return pending registration with checkoutUrl ────────────────
+  // Không sinh QR, để thi payment xử lý
   return {
     registration: {
-      ...updatedReg,
+      id: registration.id,
+      status: registration.status,
+      createdAt: registration.createdAt,
       workshop: {
         id: workshop.id,
         title: workshop.title,
@@ -170,8 +202,12 @@ export const registerFree = async (userId: string, workshopId: string) => {
         room: workshop.room,
       },
     },
+    checkoutUrl: `/checkout/${registration.id}`,
   };
 };
+
+// Alias để không break controller nếu muốn giữ nguyên
+export const registerFree = register;
 
 // ─── Service: GET /registrations/me ──────────────────────────────────────────
 
