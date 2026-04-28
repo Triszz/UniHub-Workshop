@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import * as WorkshopService from "./workshop.service";
-import { WorkshopListQuery } from "./workshop.types";
+import {
+  WorkshopListQuery,
+  WorkshopRegistrationListQuery,
+} from "./workshop.types";
 
 // ─── Public ───────────────────────────────────────────────────────────────────
 
@@ -61,6 +64,22 @@ export const adminGetWorkshopHandler = async (
       req.params.id as string,
     );
     res.json({ workshop });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const adminListWorkshopRegistrationsHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await WorkshopService.listWorkshopRegistrations(
+      req.params.id as string,
+      req.query as WorkshopRegistrationListQuery,
+    );
+    res.json(result);
   } catch (err) {
     next(err);
   }
