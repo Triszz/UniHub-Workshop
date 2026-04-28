@@ -1,13 +1,58 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { registrationService } from "../../services/registration.service";
 import { QrCodeDisplay } from "../../components/student/QrCodeDisplay";
-import type { Registration } from "../../types";
+import { registrationService } from "../../services/registration.service";
+import type { Registration, RegistrationStatus } from "../../types";
 
-/* ─────────────── helpers ─────────────── */
+const TEXT = {
+  title: "\u0110\u0103ng k\u00fd c\u1ee7a t\u00f4i",
+  subtitle: "Qu\u1ea3n l\u00fd c\u00e1c workshop b\u1ea1n \u0111\u00e3 \u0111\u0103ng k\u00fd",
+  addMore: "+ \u0110\u0103ng k\u00fd th\u00eam",
+  loading: "\u0110ang t\u1ea3i...",
+  loadFailed: "Kh\u00f4ng th\u1ec3 t\u1ea3i danh s\u00e1ch \u0111\u0103ng k\u00fd",
+  retry: "Th\u1eed l\u1ea1i",
+  empty: "B\u1ea1n ch\u01b0a \u0111\u0103ng k\u00fd workshop n\u00e0o",
+  emptyHint: "H\u00e3y kh\u00e1m ph\u00e1 c\u00e1c workshop \u0111ang m\u1edf \u0111\u0103ng k\u00fd",
+  listWorkshops: "Xem danh s\u00e1ch Workshop",
+  unknownWorkshop: "Workshop kh\u00f4ng x\u00e1c \u0111\u1ecbnh",
+  ended: "\u0110\u00e3 k\u1ebft th\u00fac",
+  registeredAt: "\u0110\u0103ng k\u00fd l\u00fac:",
+  detail: "Chi ti\u1ebft",
+  viewQr: "Xem QR",
+  closeQr: "\u0110\u00f3ng QR",
+  qrLabel:
+    "\u0110\u01b0a m\u00e3 QR n\u00e0y cho nh\u00e2n vi\u00ean check-in t\u1ea1i workshop.",
+};
 
-const formatDateTime = (iso: string) =>
-  new Date(iso).toLocaleDateString("vi-VN", {
+const statusConfig: Record<
+  RegistrationStatus,
+  { label: string; classes: string; dot: string }
+> = {
+  pending: {
+    label: "Ch\u1edd x\u1eed l\u00fd",
+    classes: "bg-amber-50 text-amber-700",
+    dot: "bg-amber-500",
+  },
+  confirmed: {
+    label: "\u0110\u00e3 x\u00e1c nh\u1eadn",
+    classes: "bg-emerald-50 text-emerald-700",
+    dot: "bg-emerald-500",
+  },
+  checked_in: {
+    label: "\u0110\u00e3 tham gia",
+    classes: "bg-blue-50 text-blue-700",
+    dot: "bg-blue-500",
+  },
+  cancelled: {
+    label: "\u0110\u00e3 h\u1ee7y",
+    classes: "bg-red-50 text-red-700",
+    dot: "bg-red-500",
+  },
+};
+
+const formatDateTime = (iso?: string) => {
+  if (!iso) return "Ch\u01b0a c\u1eadp nh\u1eadt";
+  return new Date(iso).toLocaleDateString("vi-VN", {
     weekday: "short",
     day: "2-digit",
     month: "2-digit",
@@ -15,31 +60,6 @@ const formatDateTime = (iso: string) =>
     hour: "2-digit",
     minute: "2-digit",
   });
-
-const statusConfig: Record<
-  string,
-  { label: string; classes: string; dot: string }
-> = {
-  confirmed: {
-    label: "Đã xác nhận",
-    classes: "bg-emerald-50 text-emerald-700",
-    dot: "bg-emerald-500",
-  },
-  pending: {
-    label: "Chờ xử lý",
-    classes: "bg-amber-50 text-amber-700",
-    dot: "bg-amber-500",
-  },
-  cancelled: {
-    label: "Đã hủy",
-    classes: "bg-red-50 text-red-700",
-    dot: "bg-red-500",
-  },
-  checked_in: {
-    label: "Đã tham gia",
-    classes: "bg-blue-50 text-blue-700",
-    dot: "bg-blue-500",
-  },
 };
 
 const extractApiError = (err: unknown, fallback: string): string => {
@@ -47,239 +67,212 @@ const extractApiError = (err: unknown, fallback: string): string => {
   return e.response?.data?.error || e.response?.data?.message || fallback;
 };
 
-/* ─────────────── component ─────────────── */
+const RegistrationBadge = ({ status }: { status: RegistrationStatus }) => {
+  const cfg = statusConfig[status] || statusConfig.pending;
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${cfg.classes}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`} />
+      {cfg.label}
+    </span>
+  );
+};
+
+const QrFullscreenModal = ({
+  registration,
+  onClose,
+}: {
+  registration: Registration;
+  onClose: () => void;
+}) => {
+  const workshop = registration.workshop;
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [onClose]);
+
+  if (!registration.qrCode) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-gray-950/80 p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="relative max-h-[94vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-8"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
+          aria-label={TEXT.closeQr}
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div className="pt-6">
+          <QrCodeDisplay
+            value={registration.qrCode}
+            variant="fullscreen"
+            title={workshop?.title || TEXT.unknownWorkshop}
+            subtitle={formatDateTime(workshop?.startsAt)}
+            meta={[workshop?.room?.name, workshop?.room?.building]
+              .filter(Boolean)
+              .join(" \u00b7 ")}
+            label={TEXT.qrLabel}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const MyRegistrationsPage: React.FC = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [selectedQrId, setSelectedQrId] = useState<string | null>(null);
 
-  // Initial fetch
-  useEffect(() => {
-    let cancelled = false;
+  const selectedRegistration = useMemo(
+    () => registrations.find((registration) => registration.id === selectedQrId),
+    [registrations, selectedQrId],
+  );
 
-    registrationService.getMyRegistrations().then(
-      (data) => {
-        if (!cancelled) {
-          setRegistrations(data);
-          setError("");
-          setLoading(false);
-        }
-      },
-      (err) => {
-        if (!cancelled) {
-          setError(extractApiError(err, "Không thể tải danh sách đăng ký"));
-          setLoading(false);
-        }
-      }
-    );
-
-    return () => { cancelled = true; };
-  }, []);
-
-  // Manual retry handler (event handler, not called from effects)
-  const handleRetry = () => {
+  const loadRegistrations = useCallback(async () => {
     setLoading(true);
     setError("");
-    registrationService.getMyRegistrations().then(
-      (data) => { setRegistrations(data); setLoading(false); },
-      (err) => { setError(extractApiError(err, "Không thể tải danh sách đăng ký")); setLoading(false); }
-    );
-  };
+    try {
+      const data = await registrationService.getMyRegistrations();
+      setRegistrations(data);
+    } catch (err) {
+      setError(extractApiError(err, TEXT.loadFailed));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  const toggleExpand = (id: string) => {
-    setExpandedId((prev) => (prev === id ? null : id));
-  };
+  useEffect(() => {
+    const timeout = window.setTimeout(() => void loadRegistrations(), 0);
+    return () => window.clearTimeout(timeout);
+  }, [loadRegistrations]);
 
-  /* ─────────────── render ─────────────── */
   return (
     <>
-      {/* Header */}
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Đăng ký của tôi
-          </h2>
-          <p className="mt-1 text-sm text-gray-500">
-            Quản lý các workshop bạn đã đăng ký
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900">{TEXT.title}</h2>
+          <p className="mt-1 text-sm text-gray-500">{TEXT.subtitle}</p>
         </div>
-        <Link
-          to="/workshops"
-          className="self-start rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600
-            shadow-sm transition-colors hover:bg-gray-50"
-        >
-          + Đăng ký thêm
+        <Link to="/workshops" className="self-start rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600 shadow-sm transition-colors hover:bg-gray-50">
+          {TEXT.addMore}
         </Link>
       </div>
 
-      {/* Loading */}
       {loading && (
         <div className="flex items-center justify-center py-20">
           <div className="flex flex-col items-center gap-3">
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary-200 border-t-primary-600" />
-            <p className="text-sm text-gray-500">Đang tải...</p>
+            <p className="text-sm text-gray-500">{TEXT.loading}</p>
           </div>
         </div>
       )}
 
-      {/* Error */}
       {!loading && error && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
           <p className="text-sm text-red-700">{error}</p>
-          <button
-            onClick={handleRetry}
-            className="mt-3 text-sm font-medium text-red-600 hover:underline"
-          >
-            Thử lại
+          <button type="button" onClick={() => void loadRegistrations()} className="mt-3 text-sm font-medium text-red-600 hover:underline">
+            {TEXT.retry}
           </button>
         </div>
       )}
 
-      {/* Empty */}
       {!loading && !error && registrations.length === 0 && (
         <div className="rounded-xl border border-dashed border-gray-300 bg-white p-12 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100">
-            <svg
-              className="h-7 w-7 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 0 1 0 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 0 1 0-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375Z"
-              />
-            </svg>
-          </div>
-          <p className="text-sm font-medium text-gray-900">
-            Bạn chưa đăng ký workshop nào
-          </p>
-          <p className="mt-1 text-xs text-gray-500">
-            Hãy khám phá các workshop đang mở đăng ký
-          </p>
-          <Link
-            to="/workshops"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white
-              shadow-sm transition-colors hover:bg-primary-700"
-          >
-            Xem danh sách Workshop
+          <p className="text-sm font-medium text-gray-900">{TEXT.empty}</p>
+          <p className="mt-1 text-xs text-gray-500">{TEXT.emptyHint}</p>
+          <Link to="/workshops" className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700">
+            {TEXT.listWorkshops}
           </Link>
         </div>
       )}
 
-      {/* Registration cards */}
       {!loading && !error && registrations.length > 0 && (
         <div className="space-y-4">
-          {registrations.map((reg) => {
-            const cfg =
-              statusConfig[reg.status] || statusConfig.confirmed;
-            const isExpanded = expandedId === reg.id;
-            const ws = reg.workshop;
-            const isPast = ws ? new Date(ws.endsAt) < new Date() : false;
+          {registrations.map((registration) => {
+            const workshop = registration.workshop;
+            const isPast = workshop ? new Date(workshop.endsAt) < new Date() : false;
+            const canShowQr =
+              Boolean(registration.qrCode) && registration.status !== "cancelled";
 
             return (
-              <div
-                key={reg.id}
+              <article
+                key={registration.id}
                 className={`rounded-xl border bg-white shadow-sm transition-all ${
-                  reg.status === "cancelled"
-                    ? "border-gray-200 opacity-60"
+                  registration.status === "cancelled"
+                    ? "border-gray-200 opacity-70"
                     : "border-gray-200 hover:border-primary-200"
                 }`}
               >
-                {/* Card header */}
-                <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex-1 min-w-0">
-                    {/* Workshop title */}
-                    <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${cfg.classes}`}
-                      >
-                        <span
-                          className={`h-1.5 w-1.5 rounded-full ${cfg.dot}`}
-                        />
-                        {cfg.label}
-                      </span>
+                <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      <RegistrationBadge status={registration.status} />
                       {isPast && (
-                        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] text-gray-500">
-                          Đã kết thúc
+                        <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-500">
+                          {TEXT.ended}
                         </span>
                       )}
                     </div>
-                    <h3 className="text-base font-semibold text-gray-900 truncate">
-                      {ws?.title || "Workshop không xác định"}
+                    <h3 className="truncate text-base font-semibold text-gray-900">
+                      {workshop?.title || TEXT.unknownWorkshop}
                     </h3>
-                    {ws && (
-                      <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
-                        <span className="flex items-center gap-1">
-                          <svg className="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                          </svg>
-                          {formatDateTime(ws.startsAt)}
+                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500">
+                      <span>{formatDateTime(workshop?.startsAt)}</span>
+                      {workshop?.room?.name && (
+                        <span>
+                          {workshop.room.name}
+                          {workshop.room.building
+                            ? ` \u00b7 ${workshop.room.building}`
+                            : ""}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <svg className="h-3.5 w-3.5 text-gray-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                          </svg>
-                          {ws.room?.name}
-                          {ws.room?.building && ` – ${ws.room.building}`}
-                        </span>
-                      </div>
-                    )}
-                    <p className="mt-1.5 text-[11px] text-gray-400">
-                      Đăng ký lúc: {formatDateTime(reg.createdAt)}
+                      )}
+                    </div>
+                    <p className="mt-1.5 text-xs text-gray-400">
+                      {TEXT.registeredAt} {formatDateTime(registration.createdAt)}
                     </p>
                   </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 shrink-0">
-                    {ws && (
-                      <Link
-                        to={`/workshops/${ws.id}`}
-                        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-600
-                          transition-colors hover:bg-gray-50"
-                      >
-                        Chi tiết
+                  <div className="flex shrink-0 flex-wrap items-center gap-2">
+                    {workshop && (
+                      <Link to={`/workshops/${workshop.id}`} className="rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-600 transition-colors hover:bg-gray-50">
+                        {TEXT.detail}
                       </Link>
                     )}
-                    {reg.qrCode && reg.status !== "cancelled" && (
-                      <button
-                        onClick={() => toggleExpand(reg.id)}
-                        className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                          isExpanded
-                            ? "bg-primary-600 text-white"
-                            : "border border-primary-200 bg-primary-50 text-primary-700 hover:bg-primary-100"
-                        }`}
-                      >
-                        {isExpanded ? "Ẩn QR" : "Xem QR"}
+                    {canShowQr && (
+                      <button type="button" onClick={() => setSelectedQrId(registration.id)} className="rounded-lg bg-primary-600 px-3 py-2 text-xs font-medium text-white shadow-sm transition-colors hover:bg-primary-700">
+                        {TEXT.viewQr}
                       </button>
                     )}
                   </div>
                 </div>
-
-                {/* QR Code expanded section */}
-                {isExpanded && reg.qrCode && (
-                  <div className="border-t border-gray-100 bg-gray-50/50 px-5 py-6">
-                    <div className="flex flex-col items-center">
-                      <p className="mb-4 text-sm font-medium text-gray-700">
-                        Mã QR check-in
-                      </p>
-                      <QrCodeDisplay
-                        value={reg.qrCode}
-                        size={220}
-                        label="Đưa mã QR này cho nhân viên check-in tại workshop"
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
+              </article>
             );
           })}
         </div>
+      )}
+
+      {selectedRegistration?.qrCode && (
+        <QrFullscreenModal
+          registration={selectedRegistration}
+          onClose={() => setSelectedQrId(null)}
+        />
       )}
     </>
   );
