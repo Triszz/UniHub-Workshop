@@ -2,7 +2,9 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "../../shared/database/prisma";
 import {
   CreateWorkshopDto,
+  RegistrationStatus,
   UpdateWorkshopDto,
+  WorkshopRegistrationListQuery,
   WorkshopListQuery,
 } from "./workshop.types";
 import { notificationQueue } from "../../workers/notification.worker";
@@ -159,6 +161,95 @@ export const getWorkshopByIdAdmin = async (id: string) => {
   }
 
   return workshop;
+};
+
+export const listWorkshopRegistrations = async (
+  id: string,
+  query: WorkshopRegistrationListQuery,
+) => {
+  const workshop = await prisma.workshop.findUnique({
+    where: { id },
+    select: { id: true, title: true },
+  });
+
+  if (!workshop) {
+    throw appError("Workshop kh\u00f4ng t\u1ed3n t\u1ea1i.", 404);
+  }
+
+  const page = Math.max(1, parseInt(query.page ?? "1"));
+  const limit = Math.min(100, Math.max(1, parseInt(query.limit ?? "50")));
+  const skip = (page - 1) * limit;
+  const validStatuses = new Set<RegistrationStatus>([
+    "pending",
+    "confirmed",
+    "checked_in",
+    "cancelled",
+  ]);
+
+  const status =
+    query.status && query.status !== "all" && validStatuses.has(query.status)
+      ? query.status
+      : undefined;
+  const where: Prisma.RegistrationWhereInput = {
+    workshopId: id,
+    ...(status ? { status } : {}),
+  };
+
+  const [registrations, total] = await Promise.all([
+    prisma.registration.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip,
+      take: limit,
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        user: {
+          select: {
+            id: true,
+            fullName: true,
+            email: true,
+          },
+        },
+        payment: {
+          select: {
+            id: true,
+            amount: true,
+            status: true,
+          },
+        },
+        checkin: {
+          select: {
+            checkedInAt: true,
+            isOffline: true,
+            deviceId: true,
+          },
+        },
+      },
+    }),
+    prisma.registration.count({ where }),
+  ]);
+
+  return {
+    workshop,
+    registrations: registrations.map((registration) => ({
+      ...registration,
+      payment: registration.payment
+        ? {
+            ...registration.payment,
+            amount: Number(registration.payment.amount),
+          }
+        : null,
+    })),
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 // ─── Admin: POST /admin/workshops ────────────────────────────────────────────
@@ -446,6 +537,10 @@ export const getWorkshopStats = async (id: string) => {
   );
 
   const confirmed = regByStatus["confirmed"] ?? 0;
+  const checkedIn = regByStatus["checked_in"] ?? 0;
+  const attendanceBase = confirmed + checkedIn;
+  const attendanceRate =
+    attendanceBase > 0 ? Number(((checkinCount / attendanceBase) * 100).toFixed(1)) : 0;
 
   // Tính doanh thu (chỉ từ payment completed)
   const revenueResult = await prisma.payment.aggregate({
@@ -463,14 +558,12 @@ export const getWorkshopStats = async (id: string) => {
       confirmed,
       pending: regByStatus["pending"] ?? 0,
       cancelled: regByStatus["cancelled"] ?? 0,
-      checkedIn: regByStatus["checked_in"] ?? 0,
+      checkedIn,
     },
     checkins: {
       total: checkinCount,
-      rate:
-        confirmed > 0
-          ? `${((checkinCount / confirmed) * 100).toFixed(1)}%`
-          : "0%",
+      rate: `${attendanceRate.toFixed(1)}%`,
+      attendanceRate,
     },
     revenue: {
       total: Number(revenueResult._sum.amount ?? 0),

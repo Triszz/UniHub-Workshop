@@ -74,6 +74,74 @@ export interface CancelWorkshopResponse {
   affectedRegistrations: number;
 }
 
+/* Admin Stats */
+
+export interface WorkshopStatsResponse {
+  workshop: {
+    id: string;
+    title: string;
+    capacity: number;
+    status: WorkshopStatus;
+    price: number;
+  };
+  registrations: {
+    total: number;
+    confirmed: number;
+    pending: number;
+    cancelled: number;
+    checkedIn: number;
+  };
+  checkins: {
+    total: number;
+    rate: string;
+    attendanceRate?: number;
+  };
+  revenue: {
+    total: number;
+    currency: string;
+  };
+}
+
+export type AdminRegistrationFilter =
+  | "all"
+  | "pending"
+  | "confirmed"
+  | "checked_in"
+  | "cancelled";
+
+export interface AdminWorkshopRegistration {
+  id: string;
+  status: RegistrationStatus;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    id: string;
+    fullName: string;
+    email: string;
+  };
+  payment?: {
+    id: string;
+    amount: number;
+    status: string;
+  } | null;
+  checkin?: {
+    checkedInAt: string;
+    isOffline: boolean;
+    deviceId?: string | null;
+  } | null;
+}
+
+export interface AdminWorkshopRegistrationsResponse {
+  workshop: { id: string; title: string };
+  registrations: AdminWorkshopRegistration[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
 /* ─── Registration ─── */
 
 export type RegistrationStatus = "confirmed" | "pending" | "cancelled" | "checked_in";

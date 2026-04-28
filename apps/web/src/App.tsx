@@ -10,6 +10,7 @@ import { WorkshopDetailPage } from "./pages/student/WorkshopDetailPage";
 import { MyRegistrationsPage } from "./pages/student/MyRegistrationsPage";
 import { CheckoutPage } from "./pages/student/CheckoutPage";
 import { WorkshopAdminPage } from "./pages/admin/WorkshopAdminPage";
+import { WorkshopStatsPage } from "./pages/admin/WorkshopStatsPage";
 
 function App() {
   return (
@@ -48,6 +49,14 @@ function App() {
             element={
               <ProtectedRoute roles={["organizer"]}>
                 <WorkshopAdminPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/workshops/:id/stats"
+            element={
+              <ProtectedRoute roles={["organizer"]}>
+                <WorkshopStatsPage />
               </ProtectedRoute>
             }
           />
