@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { prisma } from "../../shared/database/prisma";
+import { enqueueRegistrationNotifications } from "../notification/notification.scheduler";
 import { QrPayload } from "./registration.types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -168,9 +169,13 @@ export const register = async (userId: string, workshopId: string) => {
       select: { id: true, status: true, qrCode: true, createdAt: true },
     });
 
-    // ── Enqueue notification (TODO Ngày 9) ─────────────────────────────────
-    console.log(
-      `[TODO] Enqueue notification: registration_confirmed — user ${userId}, workshop ${workshopId}`,
+    await enqueueRegistrationNotifications(
+      {
+        registrationId: updatedReg.id,
+        userId,
+        workshop,
+      },
+      { includeRegistrationSuccess: true },
     );
 
     return {

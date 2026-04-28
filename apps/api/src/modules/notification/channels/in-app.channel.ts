@@ -1,6 +1,9 @@
 import { NotificationChannel, NotificationPayload } from './channel.interface';
 import { prisma } from '../../../shared/database/prisma';
 
+const isSamePayload = (left: unknown, right: unknown) =>
+  JSON.stringify(left) === JSON.stringify(right);
+
 export class InAppChannel implements NotificationChannel {
   name = 'in_app';
 
@@ -14,6 +17,22 @@ export class InAppChannel implements NotificationChannel {
     }
 
     try {
+      const recentNotifications = await prisma.notification.findMany({
+        where: {
+          userId,
+          type,
+          channel: this.name,
+          status: { in: ['pending', 'sent', 'read'] },
+          createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+        },
+        select: { payload: true },
+      });
+
+      if (recentNotifications.some((item) => isSamePayload(item.payload, payload))) {
+        console.log(`[InAppChannel] Duplicate in-app notification skipped for user ${userId} (type: ${type})`);
+        return;
+      }
+
       await prisma.notification.create({
         data: {
           userId,

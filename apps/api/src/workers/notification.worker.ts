@@ -1,18 +1,14 @@
-import { Queue, Worker } from "bullmq";
+import { Worker } from "bullmq";
 import { redis } from "../shared/redis/client";
 import { prisma } from "../shared/database/prisma";
 import { notificationService } from "../modules/notification/notification.service";
-
-const QUEUE_NAME = "notification-queue";
+import { scheduleUpcomingRegistrationNotifications } from "../modules/notification/notification.scheduler";
+import { NOTIFICATION_QUEUE_NAME, notificationQueue } from "../modules/notification/notification.queue";
 
 // Khởi tạo Queue
-export const notificationQueue = new Queue(QUEUE_NAME, {
-  connection: redis,
-});
-
 // Khởi tạo Worker
 export const notificationWorker = new Worker(
-  QUEUE_NAME,
+  NOTIFICATION_QUEUE_NAME,
   async (job) => {
     if (job.data.type === "cron_check_reminders") {
       console.log(`[NotificationCron] Bắt đầu quét các workshop cần gửi reminder...`);
@@ -87,11 +83,6 @@ notificationWorker.on("failed", (job, err) => {
 });
 
 export const setupNotificationCron = async () => {
-  // Lặp lại mỗi giờ (0 phút mỗi giờ)
-  await notificationQueue.add(
-    "check-reminders-job",
-    { type: "cron_check_reminders" },
-    { repeat: { pattern: "0 * * * *" } }
-  );
-  console.log("Cron job NotificationReminder scheduled at minute 0 of every hour");
+  const scheduledCount = await scheduleUpcomingRegistrationNotifications();
+  console.log(`[NotificationScheduler] Scheduled lifecycle notifications for ${scheduledCount} active registrations`);
 };

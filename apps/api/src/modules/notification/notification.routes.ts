@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "../../shared/database/prisma";
 import { verifyJWT } from "../../shared/middleware/auth";
-import { notificationQueue } from "../../workers/notification.worker";
+import { notificationQueue } from "./notification.queue";
 
 export const notificationRouter = Router();
 
@@ -106,6 +106,10 @@ notificationRouter.patch(
 );
 
 notificationRouter.post("/test", async (req: Request, res: Response): Promise<any> => {
+  if (process.env.ENABLE_NOTIFICATION_TEST !== "true") {
+    return res.status(404).json({ error: "Notification test endpoint is disabled" });
+  }
+
   const { userId, type, payload } = req.body;
 
   if (!userId || !type) {
