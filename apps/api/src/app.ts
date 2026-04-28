@@ -14,6 +14,10 @@ import {
   paymentRouter,
   circuitBreakerAdminRouter,
 } from "./modules/payment/payment.routes";
+import {
+  checkinRouter,
+  checkinAdminRouter,
+} from "./modules/checkin/checkin.routes";
 import { errorHandler } from "./shared/middleware/errorHandler";
 import { notFound } from "./shared/middleware/notFound";
 import { setupCsvImportCron } from "./workers/csv-import.worker";
@@ -40,10 +44,19 @@ app.use("/api/v1", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/workshops", workshopPublicRouter);
 app.use("/api/v1/admin/workshops", workshopAdminRouter);
+
+// Mount checkin admin vào /admin/workshops/:id/checkins
+// Cần dùng mergeParams để :id từ parent router được truyền xuống
+import { Router } from "express";
+const workshopCheckinRouter = Router({ mergeParams: true });
+workshopCheckinRouter.use("/:id/checkins", checkinAdminRouter);
+app.use("/api/v1/admin/workshops", workshopCheckinRouter);
+
 app.use("/api/v1/admin/csv-imports", csvImportAdminRouter);
 app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/registrations", registrationRouter);
 app.use("/api/v1/payments", paymentRouter);
+app.use("/api/v1/checkins", checkinRouter);
 app.use("/api/v1/admin/circuit-breaker", circuitBreakerAdminRouter);
 
 // ─── Error handling ─────────────────────────────────────
