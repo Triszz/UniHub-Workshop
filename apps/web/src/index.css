@@ -17,3 +17,26 @@
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
 }
+
+/* Custom keyframes for admin UI animations */
+@keyframes dialog-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

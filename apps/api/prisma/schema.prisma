@@ -37,26 +37,27 @@ model Room {
 }
 
 model Workshop {
-  id               String         @id @default(uuid())
-  title            String
-  description      String?
-  speakerName      String?        @map("speaker_name")
-  speakerBio       String?        @map("speaker_bio")
-  roomId           String?        @map("room_id")
-  capacity         Int
-  registeredCount  Int            @default(0) @map("registered_count")
-  startsAt         DateTime       @map("starts_at")
-  endsAt           DateTime       @map("ends_at")
-  price            Decimal        @default(0) @db.Decimal(10, 2)
-  status           String         @default("draft")
-  aiSummary        String?        @map("ai_summary")
-  pdfUrl           String?        @map("pdf_url")
-  createdBy        String?        @map("created_by")
-  createdAt        DateTime       @default(now()) @map("created_at")
-  updatedAt        DateTime       @updatedAt @map("updated_at")
-  is_reminder_sent Boolean        @default(false)
-  registrations    Registration[]
-  room             Room?          @relation(fields: [roomId], references: [id])
+  id              String    @id @default(uuid())
+  title           String
+  description     String?
+  speakerName     String?   @map("speaker_name")
+  speakerBio      String?   @map("speaker_bio")
+  roomId          String?   @map("room_id")
+  capacity        Int
+  registeredCount Int       @default(0) @map("registered_count")
+  startsAt        DateTime  @map("starts_at")
+  endsAt          DateTime  @map("ends_at")
+  price           Decimal   @default(0) @db.Decimal(10, 2)
+  status          String    @default("draft")
+  aiSummary       String?   @map("ai_summary")
+  pdfUrl          String?   @map("pdf_url")
+  createdBy       String?   @map("created_by")
+  isReminderSent  Boolean   @default(false) @map("is_reminder_sent")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  room          Room?          @relation(fields: [roomId], references: [id])
+  registrations Registration[]
 
   @@map("workshops")
 }

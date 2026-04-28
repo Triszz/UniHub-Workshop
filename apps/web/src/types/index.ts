@@ -21,17 +21,98 @@ export interface AuthState {
   isLoading: boolean;
 }
 
+export type WorkshopStatus = "draft" | "published" | "cancelled";
+
+export interface Room {
+  id: string;
+  name: string;
+  building?: string;
+  capacity?: number;
+}
+
 export interface Workshop {
   id: string;
   title: string;
   description?: string;
   speakerName?: string;
+  speakerBio?: string;
   capacity: number;
   registeredCount: number;
   startsAt: string;
   endsAt: string;
   price: number;
-  status: string;
+  status: WorkshopStatus;
   aiSummary?: string;
-  room?: { name: string; building?: string };
+  room: Room;
+}
+
+export interface WorkshopFormData {
+  title: string;
+  description?: string;
+  speakerName?: string;
+  speakerBio?: string;
+  roomId: string;
+  capacity: number;
+  startsAt: string;
+  endsAt: string;
+  price: number;
+  status: "draft" | "published";
+}
+
+export interface WorkshopListResponse {
+  workshops: Workshop[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface CancelWorkshopResponse {
+  cancelled: boolean;
+  affectedRegistrations: number;
+}
+
+/* ─── Registration ─── */
+
+export type RegistrationStatus = "confirmed" | "pending" | "cancelled" | "checked_in";
+
+/** Room info returned by registration endpoints (no `id` field). */
+export interface RegistrationRoomSummary {
+  name?: string;
+  building?: string;
+}
+
+export interface RegistrationWorkshopSummary {
+  id: string;
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  price?: number;
+  capacity?: number;
+  registeredCount?: number;
+  room?: RegistrationRoomSummary;
+}
+
+export interface Registration {
+  id: string;
+  status: RegistrationStatus;
+  qrCode?: string;
+  createdAt: string;
+  workshop?: RegistrationWorkshopSummary;
+}
+
+export interface RegistrationResponse {
+  registration: Registration;
+  checkoutUrl?: string;
+  payment?: {
+    id: string;
+    amount: number;
+    idempotency_key?: string;
+  };
+}
+
+export interface RegistrationListResponse {
+  registrations: Registration[];
 }
