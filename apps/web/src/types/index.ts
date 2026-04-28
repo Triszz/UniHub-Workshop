@@ -184,3 +184,27 @@ export interface RegistrationResponse {
 export interface RegistrationListResponse {
   registrations: Registration[];
 }
+
+/* Notifications */
+
+export interface NotificationItem {
+  id: string;
+  type: string;
+  channel?: string;
+  payload?: {
+    title?: string;
+    message?: string;
+    workshopTitle?: string;
+    startsAt?: string;
+    roomName?: string;
+    [key: string]: unknown;
+  };
+  status: string;
+  sentAt?: string | null;
+  createdAt: string;
+}
+
+export interface NotificationListResponse {
+  notifications: NotificationItem[];
+  unreadCount?: number;
+}
