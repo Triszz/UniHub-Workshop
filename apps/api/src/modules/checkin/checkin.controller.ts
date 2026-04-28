@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as CheckinService from "./checkin.service";
 import { OfflineCheckinRecord } from "./checkin.types";
 
+
 // ─── POST /checkins (online) ──────────────────────────────────────────────────
 
 export const checkInOnlineHandler = async (
@@ -88,6 +89,23 @@ export const getWorkshopCheckinsHandler = async (
 ) => {
   try {
     const result = await CheckinService.getWorkshopCheckins(
+      req.params.id as string,
+    );
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ─── GET /admin/workshops/:id/checkin-stats ───────────────────────────────────
+
+export const getWorkshopCheckinStatsHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await CheckinService.getWorkshopCheckinStats(
       req.params.id as string,
     );
     res.json(result);

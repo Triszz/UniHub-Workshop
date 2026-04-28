@@ -1,11 +1,16 @@
 import jwt from "jsonwebtoken";
+import fs from "fs";
+import path from "path";
 import { prisma } from "../../shared/database/prisma";
 import { QrPayload } from "../registration/registration.types";
 import { OfflineCheckinRecord } from "./checkin.types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+const PUBLIC_KEY = fs.readFileSync(
+  path.join(__dirname, "../../keys/public_key.pem"),
+  "utf-8"
+);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -13,15 +18,15 @@ const appError = (message: string, status: number) =>
   Object.assign(new Error(message), { status });
 
 /**
- * Verify và decode QR JWT.
+ * Verify và decode QR JWT (RS256).
  * Throw lỗi rõ ràng nếu invalid hoặc expired.
  */
 const verifyQrCode = (qrCode: string): QrPayload => {
   try {
-    const payload = jwt.verify(qrCode, JWT_SECRET, {
-      ignoreExpiration: true,
+    const payload = jwt.verify(qrCode, PUBLIC_KEY, {
+      algorithms: ["RS256"], // Ép buộc dùng thuật toán RSA
+      ignoreExpiration: false, // Nên để false để chặn QR hết hạn
     }) as QrPayload;
-
     // Đảm bảo đúng loại token (không phải auth JWT)
     if (payload.type !== "workshop_qr") {
       throw appError("Mã QR không hợp lệ.", 400);
@@ -235,3 +240,54 @@ export const getWorkshopCheckins = async (workshopId: string) => {
     })),
   };
 };
+
+// ─── Service: GET /admin/workshops/:id/checkin-stats ──────────────────────────
+
+export const getWorkshopCheckinStats = async (workshopId: string) => {
+  // Đếm tổng registrations confirmed + checked_in
+  const totalRegistrations = await prisma.registration.count({
+    where: {
+      workshopId,
+      status: { in: ["confirmed", "checked_in"] },
+    },
+  });
+
+  // Đếm số đã check-in
+  const checkedInCount = await prisma.registration.count({
+    where: {
+      workshopId,
+      status: "checked_in",
+    },
+  });
+
+  // Đếm online vs offline
+  const offlineCount = await prisma.checkin.count({
+    where: {
+      registration: { workshopId },
+      isOffline: true,
+    },
+  });
+
+  const onlineCount = await prisma.checkin.count({
+    where: {
+      registration: { workshopId },
+      isOffline: false,
+    },
+  });
+
+  return {
+    workshopId,
+    totalRegistrations,
+    checkedIn: checkedInCount,
+    notCheckedIn: totalRegistrations - checkedInCount,
+    attendanceRate:
+      totalRegistrations > 0
+        ? Math.round((checkedInCount / totalRegistrations) * 10000) / 100
+        : 0,
+    breakdown: {
+      online: onlineCount,
+      offline: offlineCount,
+    },
+  };
+};
+

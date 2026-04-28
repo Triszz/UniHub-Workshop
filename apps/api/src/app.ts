@@ -17,6 +17,7 @@ import {
 import {
   checkinRouter,
   checkinAdminRouter,
+  checkinStatsAdminRouter,
 } from "./modules/checkin/checkin.routes";
 import { errorHandler } from "./shared/middleware/errorHandler";
 import { notFound } from "./shared/middleware/notFound";
@@ -50,6 +51,7 @@ app.use("/api/v1/admin/workshops", workshopAdminRouter);
 import { Router } from "express";
 const workshopCheckinRouter = Router({ mergeParams: true });
 workshopCheckinRouter.use("/:id/checkins", checkinAdminRouter);
+workshopCheckinRouter.use("/:id/checkin-stats", checkinStatsAdminRouter);
 app.use("/api/v1/admin/workshops", workshopCheckinRouter);
 
 app.use("/api/v1/admin/csv-imports", csvImportAdminRouter);
