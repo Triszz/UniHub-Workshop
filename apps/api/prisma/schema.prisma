@@ -8,31 +8,29 @@ datasource db {
 }
 
 model User {
-  id           String   @id @default(uuid())
-  studentId    String?  @unique @map("student_id")
-  email        String   @unique
-  fullName     String   @map("full_name")
-  role         String   @default("student")
-  faculty      String?
-  year         Int?
-  passwordHash String?  @map("password_hash")
-  isActive     Boolean  @default(true) @map("is_active")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-
-  registrations  Registration[]
-  notifications  Notification[]
+  id            String         @id @default(uuid())
+  studentId     String?        @unique @map("student_id")
+  email         String         @unique
+  fullName      String         @map("full_name")
+  role          String         @default("student")
+  faculty       String?
+  year          Int?
+  passwordHash  String?        @map("password_hash")
+  isActive      Boolean        @default(true) @map("is_active")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  notifications Notification[]
+  registrations Registration[]
 
   @@map("users")
 }
 
 model Room {
-  id          String  @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
   building    String?
   capacity    Int
-  floorMapUrl String? @map("floor_map_url")
-
+  floorMapUrl String?    @map("floor_map_url")
   workshops   Workshop[]
 
   @@map("rooms")
@@ -65,47 +63,44 @@ model Workshop {
 }
 
 model Payment {
-  id              String    @id @default(uuid())
-  idempotencyKey  String    @unique @map("idempotency_key")
-  amount          Decimal   @db.Decimal(10, 2)
-  status          String    @default("pending")
-  gatewayRef      String?   @map("gateway_ref")
-  errorMessage    String?   @map("error_message")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
-
-  registration    Registration?
+  id             String        @id @default(uuid())
+  idempotencyKey String        @unique @map("idempotency_key")
+  amount         Decimal       @db.Decimal(10, 2)
+  status         String        @default("pending")
+  gatewayRef     String?       @map("gateway_ref")
+  errorMessage   String?       @map("error_message")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  registration   Registration?
 
   @@map("payments")
 }
 
 model Registration {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  workshopId  String    @map("workshop_id")
-  paymentId   String?   @unique @map("payment_id")
-  status      String    @default("pending")
-  qrCode      String?   @unique @map("qr_code")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  user        User      @relation(fields: [userId], references: [id])
-  workshop    Workshop  @relation(fields: [workshopId], references: [id])
-  payment     Payment?  @relation(fields: [paymentId], references: [id])
-  checkin     Checkin?
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  workshopId String   @map("workshop_id")
+  paymentId  String?  @unique @map("payment_id")
+  status     String   @default("pending")
+  qrCode     String?  @unique @map("qr_code")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  checkin    Checkin?
+  payment    Payment? @relation(fields: [paymentId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  workshop   Workshop @relation(fields: [workshopId], references: [id])
 
   @@unique([userId, workshopId])
   @@map("registrations")
 }
 
 model Checkin {
-  id             String    @id @default(uuid())
-  registrationId String    @unique @map("registration_id")
-  checkedInAt    DateTime  @map("checked_in_at")
-  syncedAt       DateTime? @map("synced_at")
-  deviceId       String?   @map("device_id")
-  isOffline      Boolean   @default(false) @map("is_offline")
-
+  id             String       @id @default(uuid())
+  registrationId String       @unique @map("registration_id")
+  checkedInAt    DateTime     @map("checked_in_at")
+  syncedAt       DateTime?    @map("synced_at")
+  deviceId       String?      @map("device_id")
+  isOffline      Boolean      @default(false) @map("is_offline")
   registration   Registration @relation(fields: [registrationId], references: [id])
 
   @@map("checkins")
@@ -120,7 +115,6 @@ model Notification {
   status    String    @default("pending")
   sentAt    DateTime? @map("sent_at")
   createdAt DateTime  @default(now()) @map("created_at")
-
   user      User      @relation(fields: [userId], references: [id])
 
   @@map("notifications")
