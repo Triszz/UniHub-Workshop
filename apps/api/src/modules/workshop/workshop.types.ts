@@ -14,6 +14,18 @@ export interface CreateWorkshopDto {
   status?: WorkshopStatus;
 }
 
+export type RegistrationStatus =
+  | "pending"
+  | "confirmed"
+  | "checked_in"
+  | "cancelled";
+
+export interface WorkshopRegistrationListQuery {
+  page?: string;
+  limit?: string;
+  status?: RegistrationStatus | "all";
+}
+
 // Body của PATCH /admin/workshops/:id — tất cả optional
 export type UpdateWorkshopDto = Partial<CreateWorkshopDto>;
 

@@ -5,6 +5,7 @@ import {
   getWorkshopHandler,
   adminListWorkshopsHandler,
   adminGetWorkshopHandler,
+  adminListWorkshopRegistrationsHandler,
   createWorkshopHandler,
   updateWorkshopHandler,
   cancelWorkshopHandler,
@@ -44,6 +45,15 @@ workshopAdminRouter.get("/", adminListWorkshopsHandler);
  * GET /api/v1/admin/workshops/:id
  */
 workshopAdminRouter.get("/:id", adminGetWorkshopHandler);
+
+/**
+ * GET /api/v1/admin/workshops/:id/registrations
+ * Query: ?status=all|pending|confirmed|checked_in|cancelled&page=1&limit=50
+ */
+workshopAdminRouter.get(
+  "/:id/registrations",
+  adminListWorkshopRegistrationsHandler,
+);
 
 /**
  * POST /api/v1/admin/workshops

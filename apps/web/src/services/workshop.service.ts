@@ -3,8 +3,11 @@ import type {
   Workshop,
   WorkshopFormData,
   WorkshopListResponse,
+  WorkshopStatsResponse,
   CancelWorkshopResponse,
   Room,
+  AdminRegistrationFilter,
+  AdminWorkshopRegistrationsResponse,
 } from "../types";
 
 // Fallback rooms from seed data (no rooms endpoint exists)
@@ -79,6 +82,56 @@ export const workshopService = {
       `/admin/workshops/${id}`
     );
     return response.data;
+  },
+
+  /**
+   * Get per-workshop admin stats.
+   */
+  getStats: async (id: string): Promise<WorkshopStatsResponse> => {
+    const response = await api.get<WorkshopStatsResponse>(
+      `/admin/workshops/${id}/stats`
+    );
+    return {
+      ...response.data,
+      workshop: {
+        ...response.data.workshop,
+        capacity: Number(response.data.workshop.capacity),
+        price: Number(response.data.workshop.price),
+      },
+      revenue: {
+        ...response.data.revenue,
+        total: Number(response.data.revenue.total),
+      },
+    };
+  },
+
+  /**
+   * Get registrations for one workshop with an optional status filter.
+   */
+  getRegistrations: async (
+    id: string,
+    params: {
+      status?: AdminRegistrationFilter;
+      page?: number;
+      limit?: number;
+    } = {}
+  ): Promise<AdminWorkshopRegistrationsResponse> => {
+    const response = await api.get<AdminWorkshopRegistrationsResponse>(
+      `/admin/workshops/${id}/registrations`,
+      { params }
+    );
+    return {
+      ...response.data,
+      registrations: response.data.registrations.map((registration) => ({
+        ...registration,
+        payment: registration.payment
+          ? {
+              ...registration.payment,
+              amount: Number(registration.payment.amount),
+            }
+          : null,
+      })),
+    };
   },
 
   /**
