@@ -1,10 +1,16 @@
 import jwt from "jsonwebtoken";
+import fs from "fs";
+import path from "path";
 import { prisma } from "../../shared/database/prisma";
 import { QrPayload } from "./registration.types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const JWT_SECRET = process.env.JWT_SECRET!;
+const PRIVATE_KEY = fs.readFileSync(
+  path.join(__dirname, "../../keys/private_key.pem"),
+  "utf-8"
+);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -12,7 +18,7 @@ const appError = (message: string, status: number) =>
   Object.assign(new Error(message), { status });
 
 /**
- * Sinh QR code: JWT signed chứa registrationId, workshopId, userId.
+ * Sinh QR code: JWT signed với RS256 (RSA) chứa registrationId, workshopId, userId.
  * Hết hạn 2 tiếng sau khi workshop bắt đầu.
  */
 const generateQrCode = (
@@ -31,7 +37,7 @@ const generateQrCode = (
     exp,
   };
 
-  return jwt.sign(payload, JWT_SECRET);
+  return jwt.sign(payload, PRIVATE_KEY, { algorithm: "RS256" });
 };
 
 // ─── Service: POST /registrations ────────────────────────────────────────────

@@ -4,6 +4,7 @@ import {
   checkInOnlineHandler,
   syncCheckinsHandler,
   getWorkshopCheckinsHandler,
+  getWorkshopCheckinStatsHandler,
 } from "./checkin.controller";
 
 export const checkinRouter = Router();
@@ -37,3 +38,11 @@ checkinAdminRouter.use(verifyJWT, requireRole("organizer"));
  * Danh sách tất cả check-in của một workshop
  */
 checkinAdminRouter.get("/", getWorkshopCheckinsHandler);
+
+/**
+ * Router riêng cho checkin-stats
+ * Mount tại: /api/v1/admin/workshops/:id/checkin-stats
+ */
+export const checkinStatsAdminRouter = Router();
+checkinStatsAdminRouter.use(verifyJWT, requireRole("organizer"));
+checkinStatsAdminRouter.get("/", getWorkshopCheckinStatsHandler);
