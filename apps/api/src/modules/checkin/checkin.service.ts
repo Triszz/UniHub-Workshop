@@ -9,7 +9,7 @@ import { OfflineCheckinRecord } from "./checkin.types";
 
 const PUBLIC_KEY = fs.readFileSync(
   path.join(__dirname, "../../keys/public_key.pem"),
-  "utf-8"
+  "utf-8",
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -140,7 +140,7 @@ export const syncOfflineCheckins = async (
       // 1. Verify QR JWT
       const payload = verifyQrCode(record.qrCode);
 
-      // 2. Lấy registration
+      // 2. Lấy registration kèm checkin hiện có
       const registration = await prisma.registration.findUnique({
         where: { id: payload.sub },
         include: { checkin: true },
@@ -159,35 +159,52 @@ export const syncOfflineCheckins = async (
         continue;
       }
 
-      // 3. Idempotent upsert — nếu đã có checkin → skip (không phải lỗi)
-      if (registration.checkin) {
-        skipped.push(record.qrCode);
-        continue;
-      }
-
-      // 4. INSERT checkin
+      // 3. ON CONFLICT DO NOTHING — dùng raw SQL để đảm bảo idempotency
+      //    Nếu checkin đã tồn tại (online hoặc sync trước) → affected rows = 0 → skipped
+      //    Nếu chưa có → insert thành công → affected rows = 1 → synced
       const checkedInAt = new Date(record.checkedInAt);
+      const validCheckedInAt = isNaN(checkedInAt.getTime())
+        ? new Date()
+        : checkedInAt;
       const now = new Date();
+      const effectiveDeviceId = record.deviceId ?? deviceId ?? null;
 
-      await prisma.$transaction([
-        prisma.checkin.create({
-          data: {
-            registrationId: registration.id,
-            checkedInAt: isNaN(checkedInAt.getTime()) ? now : checkedInAt,
-            syncedAt: now,
-            deviceId: record.deviceId ?? deviceId ?? null,
-            isOffline: true,
-          },
-        }),
-        prisma.registration.update({
+      const result = await prisma.$executeRaw`
+        INSERT INTO checkins (
+          id,
+          registration_id,
+          checked_in_at,
+          synced_at,
+          device_id,
+          is_offline
+        )
+        VALUES (
+          gen_random_uuid(),
+          ${registration.id}::uuid,
+          ${validCheckedInAt},
+          ${now},
+          ${effectiveDeviceId},
+          true
+        )
+        ON CONFLICT (registration_id) DO NOTHING
+      `;
+
+      // result = số rows bị ảnh hưởng
+      // 1 → insert thành công → synced
+      // 0 → đã tồn tại → skipped
+      if (result === 1) {
+        // Cập nhật status registration
+        await prisma.registration.update({
           where: { id: registration.id },
           data: { status: "checked_in" },
-        }),
-      ]);
-
-      synced.push(record.qrCode);
+        });
+        synced.push(record.qrCode);
+      } else {
+        // Record đã tồn tại — không phải lỗi
+        skipped.push(record.qrCode);
+      }
     } catch (err: any) {
-      // Lỗi không mong đợi cho record này — tiếp tục xử lý record tiếp theo
+      // Lỗi không mong đợi — tiếp tục xử lý record tiếp theo
       failed.push({
         qrCode: record.qrCode,
         reason: err.message ?? "Lỗi không xác định.",
@@ -290,4 +307,3 @@ export const getWorkshopCheckinStats = async (workshopId: string) => {
     },
   };
 };
-

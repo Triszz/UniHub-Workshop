@@ -9,7 +9,9 @@
     "dev:gateway": "ts-node-dev --respawn --transpile-only src/mock-gateway/mock-gateway.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "seed": "ts-node seed/seed.ts"
+    "seed": "ts-node-dev --transpile-only seed/seed.ts",
+    "migrate": "prisma migrate deploy",
+    "setup": "bash scripts/setup.sh"
   },
   "keywords": [],
   "author": "",
