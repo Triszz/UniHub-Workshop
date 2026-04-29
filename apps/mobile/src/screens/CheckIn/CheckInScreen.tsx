@@ -151,9 +151,9 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
           setIsOnline(online);
           console.log("Network status:", online ? "Online" : "Offline");
 
-          // Sync when coming back online
-          if (online && pendingCount > 0) {
-            console.log("Network restored, attempting sync...");
+          // Auto-sync when coming back online (SyncManager will check for pending records)
+          if (online) {
+            console.log("Network restored, attempting auto-sync...");
             checkinSyncManager.syncWhenOnline();
           }
         });
@@ -232,14 +232,14 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
         );
         setLastResult({
           type: "error",
-          message: "❌ QR code expired",
+          message: "QR code expired",
         });
         throw new Error("QR code expired");
       }
 
       // 3. Verify JWT signature and extract payload
       const payload = await verifyQrCodeJwt(scannedData);
-      console.log("✅ QR signature verified:", payload);
+      // console.log(" QR signature verified:", payload);
 
       // 4. Check local dedup (SQLite)
       const alreadyCheckedIn = await checkinDB.hasCheckin(
@@ -251,7 +251,7 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
         );
         setLastResult({
           type: "error",
-          message: "⚠️ Already checked in",
+          message: " Already checked in",
         });
         throw new Error("Registration already checked in");
       }
@@ -277,7 +277,7 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
             qrCode: scannedData,
             deviceId,
           });
-
+          // console.log(response.data)
           if (response.data?.student?.fullName) {
             studentName = response.data.student.fullName;
             console.log("Online check-in successful:", studentName);
@@ -409,7 +409,7 @@ export const CheckInScreen: React.FC<{ navigation: any }> = ({
           <View style={styles.scannerFrame} />
           <Text style={styles.scannerText}>
             {isProcessing
-              ? "⏳ Processing..."
+              ? " Processing..."
               : "Align QR code within frame"}
           </Text>
         </View>
