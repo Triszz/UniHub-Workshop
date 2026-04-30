@@ -4,7 +4,13 @@ import { Link } from "react-router-dom";
 import { workshopService } from "../../services/workshop.service";
 import { WorkshopForm } from "../../components/admin/WorkshopForm";
 import { ConfirmDialog } from "../../components/admin/ConfirmDialog";
-import type { Workshop, WorkshopFormData, Room } from "../../types";
+import { AiSummaryPanel } from "../../components/admin/AiSummaryPanel";
+import type {
+  AiSummaryStatus,
+  Workshop,
+  WorkshopFormData,
+  Room,
+} from "../../types";
 
 /* ─────────────────────── helpers ─────────────────────── */
 
@@ -69,6 +75,7 @@ export const WorkshopAdminPage: React.FC = () => {
   // Cancel dialog
   const [cancelTarget, setCancelTarget] = useState<Workshop | null>(null);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [aiSummaryTarget, setAiSummaryTarget] = useState<Workshop | null>(null);
 
   // Toast
   const [toast, setToast] = useState<{
@@ -188,6 +195,27 @@ export const WorkshopAdminPage: React.FC = () => {
     setEditingWorkshop(null);
     setFormError("");
   };
+
+  const handleAiSummaryStatusChange = useCallback((
+    workshopId: string,
+    status: AiSummaryStatus
+  ) => {
+    const applyStatusToWorkshop = (workshop: Workshop): Workshop =>
+      workshop.id === workshopId &&
+      (workshop.pdfUrl !== status.pdfUrl ||
+        workshop.aiSummary !== status.aiSummary)
+        ? {
+            ...workshop,
+            pdfUrl: status.pdfUrl,
+            aiSummary: status.aiSummary,
+          }
+        : workshop;
+
+    setWorkshops((current) => current.map(applyStatusToWorkshop));
+    setAiSummaryTarget((current) =>
+      current ? applyStatusToWorkshop(current) : current
+    );
+  }, []);
 
   /* ── filter state ── */
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -524,6 +552,38 @@ export const WorkshopAdminPage: React.FC = () => {
                                     />
                                   </svg>
                                 </Link>
+                                <button
+                                  id={`btn-ai-summary-${ws.id}`}
+                                  type="button"
+                                  onClick={() => setAiSummaryTarget(ws)}
+                                  title="PDF & AI Summary"
+                                  className={`rounded-lg p-2 transition-colors ${
+                                    ws.aiSummary
+                                      ? "text-emerald-600 hover:bg-emerald-50"
+                                      : ws.pdfUrl
+                                        ? "text-amber-600 hover:bg-amber-50"
+                                        : "text-gray-500 hover:bg-violet-50 hover:text-violet-600"
+                                  }`}
+                                >
+                                  <svg
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5A3.375 3.375 0 0 0 9.625 2.25H6.75A2.25 2.25 0 0 0 4.5 4.5v15A2.25 2.25 0 0 0 6.75 21.75h10.5a2.25 2.25 0 0 0 2.25-2.25v-5.25Z"
+                                    />
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="M9.813 15.904 9 18.75l-.813-2.846a3 3 0 0 0-2.091-2.091L3.25 13l2.846-.813a3 3 0 0 0 2.091-2.091L9 7.25l.813 2.846a3 3 0 0 0 2.091 2.091L14.75 13l-2.846.813a3 3 0 0 0-2.091 2.091Z"
+                                    />
+                                  </svg>
+                                </button>
                                 {!isCancelled && (
                                   <>
                                     <button
@@ -642,6 +702,51 @@ export const WorkshopAdminPage: React.FC = () => {
         onConfirm={handleConfirmCancel}
         onCancel={() => setCancelTarget(null)}
       />
+
+      {aiSummaryTarget && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-gray-900/40 px-4 py-6">
+          <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-xl bg-white shadow-xl">
+            <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">
+                  PDF & AI Summary
+                </h2>
+                <p className="mt-1 text-sm text-gray-500">
+                  {aiSummaryTarget.title}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAiSummaryTarget(null)}
+                className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Đóng"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18 18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="p-5">
+              <AiSummaryPanel
+                workshop={aiSummaryTarget}
+                onStatusChange={(status) =>
+                  handleAiSummaryStatusChange(aiSummaryTarget.id, status)
+                }
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

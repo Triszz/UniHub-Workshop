@@ -42,8 +42,33 @@ export interface Workshop {
   endsAt: string;
   price: number;
   status: WorkshopStatus;
-  aiSummary?: string;
+  aiSummary?: string | null;
+  pdfUrl?: string | null;
   room: Room;
+}
+
+export type AiSummaryJobState =
+  | "active"
+  | "completed"
+  | "delayed"
+  | "failed"
+  | "paused"
+  | "prioritized"
+  | "unknown"
+  | "waiting"
+  | "waiting-children"
+  | null;
+
+export interface AiSummaryStatus {
+  pdfUrl: string | null;
+  aiSummary: string | null;
+  jobState: AiSummaryJobState;
+}
+
+export interface AiSummaryActionResponse {
+  message: string;
+  pdfUrl?: string;
+  jobId?: string | number;
 }
 
 export interface WorkshopFormData {
