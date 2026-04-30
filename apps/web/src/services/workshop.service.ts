@@ -8,6 +8,8 @@ import type {
   Room,
   AdminRegistrationFilter,
   AdminWorkshopRegistrationsResponse,
+  AiSummaryActionResponse,
+  AiSummaryStatus,
 } from "../types";
 
 // Fallback rooms from seed data (no rooms endpoint exists)
@@ -80,6 +82,44 @@ export const workshopService = {
   cancel: async (id: string): Promise<CancelWorkshopResponse> => {
     const response = await api.delete<CancelWorkshopResponse>(
       `/admin/workshops/${id}`
+    );
+    return response.data;
+  },
+
+  /**
+   * Upload a workshop PDF and enqueue AI summary generation.
+   */
+  uploadPdf: async (
+    id: string,
+    file: File
+  ): Promise<AiSummaryActionResponse> => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post<AiSummaryActionResponse>(
+      `/admin/workshops/${id}/pdf`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+    return response.data;
+  },
+
+  /**
+   * Retry AI summary generation for an already uploaded PDF.
+   */
+  retryAiSummary: async (id: string): Promise<AiSummaryActionResponse> => {
+    const response = await api.post<AiSummaryActionResponse>(
+      `/admin/workshops/${id}/ai-summary/retry`
+    );
+    return response.data;
+  },
+
+  /**
+   * Get current AI summary generation status.
+   */
+  getAiSummaryStatus: async (id: string): Promise<AiSummaryStatus> => {
+    const response = await api.get<AiSummaryStatus>(
+      `/admin/workshops/${id}/ai-summary/status`
     );
     return response.data;
   },

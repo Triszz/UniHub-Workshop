@@ -28,7 +28,21 @@ const extractApiError = (err: unknown, fallback: string): string => {
   return e.response?.data?.error || e.response?.data?.message || fallback;
 };
 
-const POLL_INTERVAL = 8_000;
+const POLL_INTERVAL = 5_000;
+
+const AiSummarySkeleton = () => (
+  <div className="mb-6 rounded-lg border border-primary-100 bg-primary-50/50 p-4">
+    <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-primary-800">
+      <span className="h-4 w-4 animate-spin rounded-full border-2 border-primary-200 border-t-primary-600" />
+      {"Đang tạo tóm tắt AI..."}
+    </h3>
+    <div className="space-y-2">
+      <div className="h-3 w-full animate-pulse rounded bg-primary-100" />
+      <div className="h-3 w-11/12 animate-pulse rounded bg-primary-100" />
+      <div className="h-3 w-4/5 animate-pulse rounded bg-primary-100" />
+    </div>
+  </div>
+);
 
 export const WorkshopDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -182,6 +196,7 @@ export const WorkshopDetailPage: React.FC = () => {
     workshop.capacity > 0
       ? (workshop.registeredCount / workshop.capacity) * 100
       : 100;
+  const isAiSummaryProcessing = Boolean(workshop.pdfUrl && !workshop.aiSummary);
 
   return (
     <>
@@ -235,6 +250,8 @@ export const WorkshopDetailPage: React.FC = () => {
                 </p>
               </div>
             )}
+
+            {isAiSummaryProcessing && <AiSummarySkeleton />}
 
             {workshop.aiSummary && (
               <div className="mb-6 rounded-lg border border-primary-100 bg-primary-50/50 p-4">
