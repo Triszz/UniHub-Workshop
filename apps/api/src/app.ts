@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import path from "path";
 
 import { healthRouter } from "./modules/health/health.routes";
 import { authRouter } from "./modules/auth/auth.routes";
@@ -19,6 +20,8 @@ import {
   checkinAdminRouter,
   checkinStatsAdminRouter,
 } from "./modules/checkin/checkin.routes";
+import { aiSummaryRouter } from "./modules/ai-summary/ai-summary.routes";
+import { startAiSummaryWorker } from "./modules/ai-summary/ai-summary.worker";
 import { errorHandler } from "./shared/middleware/errorHandler";
 import { notFound } from "./shared/middleware/notFound";
 import { setupCsvImportCron } from "./workers/csv-import.worker";
@@ -40,11 +43,14 @@ app.use(
 );
 app.use(express.json());
 
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use("/api/v1", healthRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/workshops", workshopPublicRouter);
 app.use("/api/v1/admin/workshops", workshopAdminRouter);
+app.use("/api/v1/admin/workshops", aiSummaryRouter);
 
 // Mount checkin admin vào /admin/workshops/:id/checkins
 // Cần dùng mergeParams để :id từ parent router được truyền xuống
@@ -64,6 +70,8 @@ app.use("/api/v1/admin/circuit-breaker", circuitBreakerAdminRouter);
 // ─── Error handling ─────────────────────────────────────
 app.use(notFound);
 app.use(errorHandler);
+
+startAiSummaryWorker();
 
 app.listen(PORT, HOST, async () => {
   console.log(`API Server running on http://localhost:${PORT}`);
