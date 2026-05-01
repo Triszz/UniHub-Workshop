@@ -34,6 +34,12 @@ const getSeatsInfo = (ws: Workshop) => {
   return { remaining, pct };
 };
 
+const getAiSummaryPreview = (summary?: string | null) => {
+  if (!summary) return "";
+  const normalized = summary.replace(/\s+/g, " ").trim();
+  return normalized.length > 170 ? `${normalized.slice(0, 170)}...` : normalized;
+};
+
 const isWorkshopPast = (ws: Workshop) => new Date(ws.endsAt) < new Date();
 const isWorkshopOngoing = (ws: Workshop) => {
   const now = new Date();
@@ -260,6 +266,25 @@ export const WorkshopListPage: React.FC = () => {
                   <h3 className="mb-2 text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-primary-700 transition-colors">
                     {ws.title}
                   </h3>
+
+                  {ws.aiSummary ? (
+                    <div className="mb-3 rounded-lg border border-primary-100 bg-primary-50/60 px-3 py-2">
+                      <p className="mb-1 flex items-center gap-1.5 text-xs font-semibold text-primary-800">
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
+                        </svg>
+                        AI Summary
+                      </p>
+                      <p className="line-clamp-3 text-xs leading-relaxed text-primary-700">
+                        {getAiSummaryPreview(ws.aiSummary)}
+                      </p>
+                    </div>
+                  ) : ws.pdfUrl ? (
+                    <div className="mb-3 flex items-center gap-2 rounded-lg border border-amber-100 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-700">
+                      <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-amber-200 border-t-amber-600" />
+                      Đang tạo AI Summary
+                    </div>
+                  ) : null}
 
                   {/* Speaker */}
                   {ws.speakerName && (
