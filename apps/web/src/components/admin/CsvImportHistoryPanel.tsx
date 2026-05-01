@@ -209,7 +209,7 @@ export const CsvImportHistoryPanel: React.FC = () => {
                   Kết quả
                 </th>
                 <th className="px-4 py-3 font-medium text-gray-600">
-                  Ngày import
+                  Thời gian
                 </th>
                 <th className="hidden px-4 py-3 font-medium text-gray-600 xl:table-cell">
                   Lỗi
