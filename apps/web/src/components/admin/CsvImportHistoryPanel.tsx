@@ -36,6 +36,15 @@ const formatDateTime = (iso?: string | null) => {
   });
 };
 
+const formatDateOnly = (iso?: string | null) => {
+  if (!iso) return "-";
+  return new Date(iso).toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
+
 const formatNumber = (value?: number | null) =>
   value == null ? "-" : new Intl.NumberFormat("vi-VN").format(value);
 
@@ -199,7 +208,7 @@ export const CsvImportHistoryPanel: React.FC = () => {
                 <th className="px-4 py-3 font-medium text-gray-600">
                   Kết quả
                 </th>
-                <th className="hidden px-4 py-3 font-medium text-gray-600 lg:table-cell">
+                <th className="px-4 py-3 font-medium text-gray-600">
                   Thời gian
                 </th>
                 <th className="hidden px-4 py-3 font-medium text-gray-600 xl:table-cell">
@@ -225,6 +234,9 @@ export const CsvImportHistoryPanel: React.FC = () => {
                       <p className="mt-0.5 text-xs text-gray-400">
                         {log.id.slice(0, 8)}
                       </p>
+                      <p className="mt-1 text-xs text-gray-500 sm:hidden">
+                        Import {formatDateTime(log.startedAt)}
+                      </p>
                     </td>
                     <td className="px-4 py-3.5">
                       <CsvImportStatusBadge status={log.status} />
@@ -245,12 +257,15 @@ export const CsvImportHistoryPanel: React.FC = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="hidden px-4 py-3.5 lg:table-cell">
-                      <p className="text-gray-700">
+                    <td className="px-4 py-3.5">
+                      <p className="font-medium text-gray-700">
+                        {formatDateOnly(log.startedAt)}
+                      </p>
+                      <p className="text-xs text-gray-500">
                         {formatDateTime(log.startedAt)}
                       </p>
                       <p className="text-xs text-gray-400">
-                        Xong {formatDateTime(log.completedAt)}
+                        Hoàn tất: {formatDateTime(log.completedAt)}
                       </p>
                     </td>
                     <td className="hidden px-4 py-3.5 xl:table-cell">
