@@ -4,7 +4,6 @@ import { workshopService } from "../../services/workshop.service";
 import type {
   AdminRegistrationFilter,
   AdminWorkshopRegistration,
-  Workshop,
   WorkshopStatsResponse,
 } from "../../types";
 
@@ -110,7 +109,6 @@ const RegistrationStatusBadge = ({
 export const WorkshopStatsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [stats, setStats] = useState<WorkshopStatsResponse | null>(null);
-  const [workshopDetail, setWorkshopDetail] = useState<Workshop | null>(null);
   const [registrations, setRegistrations] = useState<
     AdminWorkshopRegistration[]
   >([]);
@@ -134,18 +132,16 @@ export const WorkshopStatsPage: React.FC = () => {
       setError("");
 
       try {
-        const [statsData, registrationData, detailData] = await Promise.all([
+        const [statsData, registrationData] = await Promise.all([
           workshopService.getStats(id),
           workshopService.getRegistrations(id, {
             status: filter,
             page,
             limit: PAGE_LIMIT,
           }),
-          workshopService.getById(id),
         ]);
 
         setStats(statsData);
-        setWorkshopDetail(detailData);
         setRegistrations(registrationData.registrations);
         setPagination(registrationData.pagination);
       } catch (err) {
@@ -254,47 +250,6 @@ export const WorkshopStatsPage: React.FC = () => {
 
         {stats && (
           <>
-            <section className="mb-6 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-              <div className="border-b border-gray-100 px-4 py-3">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <h2 className="text-base font-semibold text-gray-900">
-                      AI Summary
-                    </h2>
-                    <p className="text-xs text-gray-500">
-                      Tóm tắt nội dung từ PDF của workshop
-                    </p>
-                  </div>
-                  {workshopDetail?.pdfUrl && (
-                    <a
-                      href={workshopDetail.pdfUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                    >
-                      Mở PDF
-                    </a>
-                  )}
-                </div>
-              </div>
-              <div className="px-4 py-4">
-                {workshopDetail?.aiSummary ? (
-                  <p className="whitespace-pre-line text-sm leading-relaxed text-gray-700">
-                    {workshopDetail.aiSummary}
-                  </p>
-                ) : workshopDetail?.pdfUrl ? (
-                  <div className="flex items-center gap-3 rounded-lg bg-amber-50 px-3 py-3 text-sm text-amber-700">
-                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-amber-200 border-t-amber-600" />
-                    Đang tạo tóm tắt AI cho workshop này.
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">
-                    Workshop này chưa có PDF hoặc AI Summary.
-                  </p>
-                )}
-              </div>
-            </section>
-
             <section className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
               <StatCard
                 label="Số đăng ký"
