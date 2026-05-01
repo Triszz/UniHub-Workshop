@@ -233,3 +233,20 @@ export interface NotificationListResponse {
   notifications: NotificationItem[];
   unreadCount?: number;
 }
+
+/* CSV Import Admin */
+
+export type CsvImportStatus = "processing" | "completed" | "failed" | string;
+
+export interface CsvImportLog {
+  id: string;
+  filename?: string | null;
+  totalRows?: number | null;
+  importedRows?: number | null;
+  skippedRows?: number | null;
+  errorRows?: number | null;
+  errors?: unknown;
+  status: CsvImportStatus;
+  startedAt: string;
+  completedAt?: string | null;
+}

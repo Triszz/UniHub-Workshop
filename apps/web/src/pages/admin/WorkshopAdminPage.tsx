@@ -5,6 +5,7 @@ import { workshopService } from "../../services/workshop.service";
 import { WorkshopForm } from "../../components/admin/WorkshopForm";
 import { ConfirmDialog } from "../../components/admin/ConfirmDialog";
 import { AiSummaryPanel } from "../../components/admin/AiSummaryPanel";
+import { CsvImportHistoryPanel } from "../../components/admin/CsvImportHistoryPanel";
 import type {
   AiSummaryStatus,
   Workshop,
@@ -643,6 +644,8 @@ export const WorkshopAdminPage: React.FC = () => {
                 </div>
               </div>
             )}
+
+            <CsvImportHistoryPanel />
           </>
         )}
 
