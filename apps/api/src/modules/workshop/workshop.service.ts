@@ -385,7 +385,7 @@ export const updateWorkshop = async (id: string, dto: UpdateWorkshopDto) => {
   if (startsAt !== undefined) updateData.startsAt = startsAt;
   if (endsAt !== undefined) updateData.endsAt = endsAt;
 
-  // Nếu thời gian thay đổi, reset isReminderSent để Cron job quét lại
+  // Nếu thời gian thay đổi, reset isReminderSent và is1hReminderSent để Cron job quét lại
   const timeChanged =
     (dto.startsAt || dto.endsAt) &&
     (startsAt?.getTime() !== existing.startsAt.getTime() ||
@@ -393,6 +393,7 @@ export const updateWorkshop = async (id: string, dto: UpdateWorkshopDto) => {
 
   if (timeChanged) {
     updateData.isReminderSent = false;
+    updateData.is1hReminderSent = false;
   }
 
   const updated = await prisma.workshop.update({
