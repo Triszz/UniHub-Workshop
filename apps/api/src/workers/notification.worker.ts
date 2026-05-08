@@ -14,8 +14,10 @@ export const notificationWorker = new Worker(
       console.log(`[NotificationCron] Bắt đầu quét các workshop cần gửi reminder...`);
       const now = new Date();
       const in24Hours = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+      const in1Hour = new Date(now.getTime() + 1 * 60 * 60 * 1000);
 
-      const workshops = await prisma.workshop.findMany({
+      // 1. Quét 24h reminders
+      const workshops24h = await prisma.workshop.findMany({
         where: {
           status: "published",
           isReminderSent: false,
@@ -24,8 +26,20 @@ export const notificationWorker = new Worker(
         include: { room: true },
       });
 
+      // 2. Quét 1h reminders
+      const workshops1h = await prisma.workshop.findMany({
+        where: {
+          status: "published",
+          is1hReminderSent: false,
+          startsAt: { lte: in1Hour, gt: now },
+        },
+        include: { room: true },
+      });
+
       let totalReminders = 0;
-      for (const workshop of workshops) {
+
+      // Xử lý 24h
+      for (const workshop of workshops24h) {
         const registrations = await prisma.registration.findMany({
           where: { workshopId: workshop.id, status: "confirmed" },
           select: { userId: true },
@@ -55,7 +69,40 @@ export const notificationWorker = new Worker(
           data: { isReminderSent: true },
         });
       }
-      console.log(`[NotificationCron] Quét hoàn tất. Đã đẩy ${totalReminders} jobs cho ${workshops.length} workshops.`);
+
+      // Xử lý 1h
+      for (const workshop of workshops1h) {
+        const registrations = await prisma.registration.findMany({
+          where: { workshopId: workshop.id, status: "confirmed" },
+          select: { userId: true },
+        });
+
+        if (registrations.length > 0) {
+          const jobs = registrations.map((reg) => ({
+            name: "send-notification",
+            data: {
+              type: "workshop_reminder_1h",
+              userId: reg.userId,
+              payload: {
+                workshopTitle: workshop.title,
+                startsAt: workshop.startsAt.toLocaleString("vi-VN"),
+                roomName: workshop.room?.name || "Đang cập nhật",
+              },
+            },
+            opts: { attempts: 3, backoff: { type: "exponential", delay: 60000 }, removeOnComplete: true },
+          }));
+
+          await notificationQueue.addBulk(jobs);
+          totalReminders += jobs.length;
+        }
+
+        await prisma.workshop.update({
+          where: { id: workshop.id },
+          data: { is1hReminderSent: true },
+        });
+      }
+
+      console.log(`[NotificationCron] Quét hoàn tất. Đã đẩy ${totalReminders} jobs cho ${workshops24h.length} (24h) và ${workshops1h.length} (1h) workshops.`);
       return;
     }
 
@@ -83,6 +130,19 @@ notificationWorker.on("failed", (job, err) => {
 });
 
 export const setupNotificationCron = async () => {
+  // Schedule the periodic job to run every 15 minutes
+  await notificationQueue.add(
+    "cron-reminders",
+    { type: "cron_check_reminders" },
+    {
+      repeat: {
+        pattern: "*/15 * * * *", // every 15 minutes
+      },
+      jobId: "cron-reminders-job", // Prevent duplicates
+    }
+  );
+  console.log(`[NotificationScheduler] Scheduled cron_check_reminders to run every 15 minutes`);
+
   const scheduledCount = await scheduleUpcomingRegistrationNotifications();
   console.log(`[NotificationScheduler] Scheduled lifecycle notifications for ${scheduledCount} active registrations`);
 };

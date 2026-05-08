@@ -12,6 +12,7 @@ export class EmailChannel implements NotificationChannel {
     this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'sandbox.smtp.mailtrap.io',
       port: Number(process.env.SMTP_PORT) || 2525,
+      secure: Number(process.env.SMTP_PORT) === 465,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -29,24 +30,38 @@ export class EmailChannel implements NotificationChannel {
     }
 
     try {
-      // Đọc template tương ứng với type
-      const templatePath = path.join(__dirname, '..', 'templates', `${type}.html`);
+      let templateName = type;
+      let subject = 'Thông báo từ UniHub Workshop';
+
+      if (type === 'registration_confirmed') {
+        subject = 'Xác nhận đăng ký Workshop thành công';
+      } else if (type === 'workshop_reminder') {
+        subject = 'Nhắc nhở: Workshop sắp diễn ra';
+      } else if (type === 'workshop_reminder_1h') {
+        subject = 'Nhắc nhở: Workshop sẽ bắt đầu sau 1 giờ';
+      } else if (type === 'workshop_cancelled') {
+        subject = 'Thông báo hủy Workshop';
+      } else if (type === 'registration_lifecycle') {
+        if (payload.milestone === 'registration_success') {
+          templateName = 'registration_confirmed';
+          subject = 'Xác nhận đăng ký Workshop thành công';
+        } else {
+          // Các milestone khác của lifecycle (như started, ended, reminder_1d) 
+          // có thể không gửi qua email, hoặc gửi chung 1 template. 
+          // Ở đây ta bỏ qua nếu không phải registration_success vì 1d/1h đã được xử lý bởi cron worker.
+          console.log(`[EmailChannel] Skip email for lifecycle milestone: ${payload.milestone}`);
+          return;
+        }
+      }
+
+      // Đọc template tương ứng với templateName
+      const templatePath = path.join(__dirname, '..', 'templates', `${templateName}.html`);
       let html = await fs.readFile(templatePath, 'utf-8');
 
       // Replace các biến trong template {{key}} -> value
       const data = { ...payload, fullName: user.fullName };
       for (const [key, value] of Object.entries(data)) {
         html = html.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
-      }
-
-      // Xác định subject dựa vào type
-      let subject = 'Thông báo từ UniHub Workshop';
-      if (type === 'registration_confirmed') {
-        subject = 'Xác nhận đăng ký Workshop thành công';
-      } else if (type === 'workshop_reminder') {
-        subject = 'Nhắc nhở: Workshop sắp diễn ra';
-      } else if (type === 'workshop_cancelled') {
-        subject = 'Thông báo hủy Workshop';
       }
 
       await this.transporter.sendMail({

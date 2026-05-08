@@ -53,6 +53,7 @@ model Workshop {
   pdfUrl          String?   @map("pdf_url")
   createdBy       String?   @map("created_by")
   isReminderSent  Boolean   @default(false) @map("is_reminder_sent")
+  is1hReminderSent Boolean  @default(false) @map("is_1h_reminder_sent")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
