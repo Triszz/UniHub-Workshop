@@ -99,12 +99,15 @@ export class CheckinSyncManager {
 
       // Log skipped and failed
       if (response.skipped.length > 0) {
+        await checkinDB.markMultipleSynced(response.skipped);
         console.log(
           `⏭️  ${response.skipped.length} records already checked in (skipped)`
         );
       }
 
       if (response.failed.length > 0) {
+        const failedQrCodes = response.failed.map((f: any) => f.qrCode);
+        await checkinDB.markMultipleSynced(failedQrCodes);
         console.warn(
           `⚠️  ${response.failed.length} records failed:`,
           response.failed
