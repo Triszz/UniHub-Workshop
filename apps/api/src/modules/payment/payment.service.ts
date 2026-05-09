@@ -1,5 +1,7 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import fs from "fs";
+import path from "path";
 import { prisma } from "../../shared/database/prisma";
 import { redis } from "../../shared/redis/client";
 import * as CircuitBreaker from "../../shared/circuit-breaker/circuit-breaker";
@@ -16,6 +18,10 @@ const GATEWAY_TIMEOUT_MS = parseInt(
 const IDEMPOTENCY_TTL_SEC = 86400; // 24 giờ
 const CB_NAME = "payment_gateway";
 const JWT_SECRET = process.env.JWT_SECRET!;
+const PRIVATE_KEY = fs.readFileSync(
+  path.join(__dirname, "../../keys/private_key.pem"),
+  "utf-8"
+);
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -38,7 +44,7 @@ const generateQrCode = (
     type: "workshop_qr",
     exp,
   };
-  return jwt.sign(payload, JWT_SECRET);
+  return jwt.sign(payload, PRIVATE_KEY, { algorithm: "RS256" });
 };
 
 // ─── Idempotency helpers ──────────────────────────────────────────────────────
