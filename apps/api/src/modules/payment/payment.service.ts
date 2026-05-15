@@ -20,7 +20,7 @@ const CB_NAME = "payment_gateway";
 const JWT_SECRET = process.env.JWT_SECRET!;
 const PRIVATE_KEY = fs.readFileSync(
   path.join(__dirname, "../../keys/private_key.pem"),
-  "utf-8"
+  "utf-8",
 );
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -102,23 +102,6 @@ export const processPayment = async (
     throw appError("Không tìm thấy đăng ký.", 404);
   }
 
-  if (registration.status === "confirmed") {
-    throw appError("Đăng ký này đã được xác nhận rồi.", 400);
-  }
-
-  if (registration.status === "cancelled") {
-    throw appError("Đăng ký này đã bị hủy.", 400);
-  }
-
-  if (registration.workshop.status === "cancelled") {
-    throw appError("Workshop này đã bị hủy.", 400);
-  }
-
-  const amount = Number(registration.workshop.price);
-  if (amount <= 0) {
-    throw appError("Workshop này miễn phí, không cần thanh toán.", 400);
-  }
-
   // ── 2. Idempotency check ──────────────────────────────────────────────────
   const cached = await getIdempotencyCache(clientIdempotencyKey);
 
@@ -150,6 +133,23 @@ export const processPayment = async (
       // Lần trước thất bại → xóa cache, cho phép retry
       await delIdempotencyCache(clientIdempotencyKey);
     }
+  }
+
+  if (registration.status === "confirmed") {
+    throw appError("Đăng ký này đã được xác nhận rồi.", 400);
+  }
+
+  if (registration.status === "cancelled") {
+    throw appError("Đăng ký này đã bị hủy.", 400);
+  }
+
+  if (registration.workshop.status === "cancelled") {
+    throw appError("Workshop này đã bị hủy.", 400);
+  }
+
+  const amount = Number(registration.workshop.price);
+  if (amount <= 0) {
+    throw appError("Workshop này miễn phí, không cần thanh toán.", 400);
   }
 
   // ── 3. Đánh dấu PROCESSING trước khi gọi gateway ─────────────────────────

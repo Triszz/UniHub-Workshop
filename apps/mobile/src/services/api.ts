@@ -7,7 +7,7 @@ export const TOKEN_KEY = "access_token";
 export const REFRESH_TOKEN_KEY = "refresh_token";
 
 const ENV_URL = process.env.EXPO_PUBLIC_API_URL;
-const API_BASE = ENV_URL ? `${ENV_URL}/api/v1` : "http://192.168.1.6:3000/api/v1";
+const API_BASE = `${ENV_URL}/api/v1`
 console.log("API_BASE is:", API_BASE);
 
 // ─── Axios instance ───────────────────────────────────────────────────────────
@@ -70,7 +70,7 @@ api.interceptors.response.use(
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
       }).then((newToken) => {
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newToken} `;
         return api(originalRequest);
       });
     }
@@ -83,7 +83,7 @@ api.interceptors.response.use(
       if (!refreshToken) throw new Error("No refresh token");
 
       // Gọi thẳng axios (không qua interceptor) để tránh vòng lặp vô hạn
-      const { data } = await axios.post(`${API_BASE}/auth/refresh`, {
+      const { data } = await axios.post(`${API_BASE} /auth/refresh`, {
         refresh_token: refreshToken,
       });
 
@@ -92,7 +92,7 @@ api.interceptors.response.use(
 
       processQueue(null, newToken);
 
-      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      originalRequest.headers.Authorization = `Bearer ${newToken} `;
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError, null);
