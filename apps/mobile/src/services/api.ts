@@ -68,7 +68,7 @@ api.interceptors.response.use(
       return new Promise((resolve, reject) => {
         failedQueue.push({ resolve, reject });
       }).then((newToken) => {
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers.Authorization = `Bearer ${newToken} `;
         return api(originalRequest);
       });
     }
@@ -81,7 +81,7 @@ api.interceptors.response.use(
       if (!refreshToken) throw new Error("No refresh token");
 
       // Gọi thẳng axios (không qua interceptor) để tránh vòng lặp vô hạn
-      const { data } = await axios.post(`${API_BASE}/auth/refresh`, {
+      const { data } = await axios.post(`${API_BASE} /auth/refresh`, {
         refresh_token: refreshToken,
       });
 
@@ -90,7 +90,7 @@ api.interceptors.response.use(
 
       processQueue(null, newToken);
 
-      originalRequest.headers.Authorization = `Bearer ${newToken}`;
+      originalRequest.headers.Authorization = `Bearer ${newToken} `;
       return api(originalRequest);
     } catch (refreshError) {
       processQueue(refreshError, null);
