@@ -111,9 +111,16 @@ export const csvImportWorker = new Worker(
 
         // Tạm thời dùng split cơ bản thay vì Regex để tránh lỗi lặp vô hạn (catastrophic backtracking)
         const values = line.split(",").map((v) => v.trim());
+        
+        if (values.length < expectedHeaders.length || values.some(v => v === "")) {
+          errors.push({ row: totalRows, data: line, message: "Missing columns (empty values)" });
+          skippedRows++;
+          continue;
+        }
+
         const rowObj: any = {};
         headers.forEach((h, i) => {
-          rowObj[h] = values[i] || "";
+          rowObj[h] = values[i];
         });
 
         // Validations
@@ -127,7 +134,7 @@ export const csvImportWorker = new Worker(
 
         if (errorsForRow.length > 0) {
           // console.log(`[CsvImportWorker] Dòng ${totalRows} dính lỗi validate:`, errorsForRow);
-          errors.push({ row: totalRows, student_id: rowObj.student_id, message: errorsForRow.join(", ") });
+          errors.push({ row: totalRows, data: line, message: errorsForRow.join(", ") });
           errorRows++;
           continue;
         }
@@ -141,8 +148,8 @@ export const csvImportWorker = new Worker(
           });
 
           if (existingByEmail && existingByEmail.studentId !== rowObj.student_id) {
-            errors.push({ row: totalRows, student_id: rowObj.student_id, message: "Email conflict" });
-            errorRows++;
+            errors.push({ row: totalRows, data: line, message: "Email conflict with another student" });
+            skippedRows++;
             continue;
           }
 
@@ -187,10 +194,6 @@ export const csvImportWorker = new Worker(
       console.log(`[CsvImportWorker] Job ${job.id} hoàn tất! Rows: ${importedRows}`);
 
     } catch (globalError: any) {
-      // ĐÂY CHÍNH LÀ NƠI BẮT ĐƯỢC THỦ PHẠM GÂY "TREO"
-      // console.error(`[CsvImportWorker] CRASH NGẦM TOÀN CỤC:`, globalError);
-
-      // Bắt buộc update trạng thái về failed để không bị kẹt processing
       await prisma.csvImportLog.update({
         where: { id: log.id },
         data: {
