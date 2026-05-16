@@ -20,7 +20,7 @@ registrationRouter.use(verifyJWT);
 registrationRouter.post(
   "/",
   requireRole("student"),
-  tokenBucketLimit({ capacity: 10, refillRate: 1, keyPrefix: "reg_limit" }),
+  tokenBucketLimit({ capacity: 10, refillRate: 2, keyPrefix: "reg_limit" }),
   createRegistrationHandler,
 );
 
