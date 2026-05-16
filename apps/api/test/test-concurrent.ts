@@ -75,7 +75,7 @@ async function main() {
     console.error(
       `❌ Chỉ có ${students.length} sinh viên trong DB. Cần ${CONCURRENT_USERS}.`,
     );
-    console.error("   Chạy: npx ts-node seed/seed.ts");
+    console.error("   Chạy: npx ts-node data/seed.ts");
     process.exit(1);
   }
 

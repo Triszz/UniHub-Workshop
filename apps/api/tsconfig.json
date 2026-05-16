@@ -16,6 +16,6 @@
     },
     "ignoreDeprecations": "6.0"
   },
-  "include": ["src/**/*", "test/**/*", "seed/**/*"],
+  "include": ["src/**/*", "test/**/*", "seed/**/*", "../../data/seed.ts"],
   "exclude": ["node_modules", "dist"]
 }

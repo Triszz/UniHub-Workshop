@@ -5,6 +5,23 @@ import path from "path";
 import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
+const PRIVATE_KEY_PATH = path.join(
+  __dirname,
+  "..",
+  "apps",
+  "api",
+  "src",
+  "keys",
+  "private_key.pem",
+);
+
+let PRIVATE_KEY: string;
+try {
+  PRIVATE_KEY = fs.readFileSync(PRIVATE_KEY_PATH, "utf8");
+} catch (error) {
+  console.error("Không tìm thấy Private Key tại:", PRIVATE_KEY_PATH);
+  process.exit(1);
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -23,10 +40,16 @@ const generateQrCode = (
   startsAt: Date,
 ): string => {
   const exp = Math.floor(startsAt.getTime() / 1000) + 2 * 60 * 60;
-  return jwt.sign(
-    { sub: registrationId, workshopId, userId, type: "workshop_qr", exp },
-    process.env.JWT_SECRET ?? "dev-secret-change-in-production-32chars!!",
-  );
+
+  const payload = {
+    sub: registrationId,
+    workshopId,
+    userId,
+    type: "workshop_qr",
+    exp,
+  };
+
+  return jwt.sign(payload, PRIVATE_KEY, { algorithm: "RS256" });
 };
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
@@ -367,37 +390,6 @@ async function main() {
   console.log(
     `Checkins: ${checkinCount} records (15 online + 5 offline-synced)`,
   );
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // 6. CSV SAMPLE FILE — data/students.csv
-  // ═══════════════════════════════════════════════════════════════════════════
-  const dataDir = path.join(__dirname, "..", "data");
-  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-
-  const csvLines = ["student_id,full_name,email,faculty,year"];
-  for (let i = 1; i <= 100; i++) {
-    const num = String(i).padStart(3, "0");
-    csvLines.push(
-      `SV2024${String(i).padStart(5, "0")},Sinh viên ${num},student${num}@university.edu.vn,${faculties[(i - 1) % 4]},${((i - 1) % 4) + 1}`,
-    );
-  }
-  // Thêm 5 sinh viên mới (chưa có trong DB) để test import
-  for (let i = 101; i <= 105; i++) {
-    const num = String(i).padStart(3, "0");
-    csvLines.push(
-      `SV2024${String(i).padStart(5, "0")},Sinh viên Mới ${num},student${num}@university.edu.vn,${faculties[(i - 1) % 4]},${((i - 1) % 4) + 1}`,
-    );
-  }
-  // Thêm 2 dòng lỗi để test error handling
-  csvLines.push("INVALID_ID,Sinh viên Lỗi,not-an-email,CNTT,99");
-  csvLines.push(",Thiếu ID,,Kinh tế,2");
-
-  fs.writeFileSync(
-    path.join(dataDir, "students.csv"),
-    csvLines.join("\n"),
-    "utf8",
-  );
-  console.log(`CSV: data/students.csv (100 existing + 5 new + 2 invalid rows)`);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // SUMMARY

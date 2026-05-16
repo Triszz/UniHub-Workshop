@@ -21,18 +21,18 @@ export default function App() {
   return (
     <AuthProvider>
       <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={LoginScreen}
-          options={{ title: "UniHub Check-in" }}
-        />
-        <Stack.Screen
-          name="CheckIn"
-          component={CheckInScreen}
-          options={{ title: "Quét mã QR" }}
-        />
-      </Stack.Navigator>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ title: "UniHub Check-in" }}
+          />
+          <Stack.Screen
+            name="CheckIn"
+            component={CheckInScreen}
+            options={{ title: "Quét mã QR" }}
+          />
+        </Stack.Navigator>
       </NavigationContainer>
     </AuthProvider>
   );
