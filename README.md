@@ -91,20 +91,21 @@ cd apps/mobile && npm start         # Mở app Expo Go trên điện thoại và
 ### Test Rate Limiting
 
 ```bash
-# Gửi 15 request liên tiếp → lần thứ 11 trở đi nhận 429
+# Gửi 15 request ĐỒNG THỜI → lần thứ 11 trở đi nhận 429
 TOKEN=$(curl -s -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"student001@university.edu.vn","password":"Password123!"}' \
   | jq -r '.access_token')
 
 for i in $(seq 1 15); do
-  HTTP=$(curl -s -o /dev/null -w "%{http_code}" \
-    -X POST http://localhost:3000/api/v1/registrations \
+  (HTTP=$(curl -s -o /dev/null -w "%{http_code}" \
+    -X POST "http://localhost:3000/api/v1/registrations" \
     -H "Authorization: Bearer $TOKEN" \
     -H "Content-Type: application/json" \
     -d '{"workshopId":"ws-003"}')
-  echo "Request $i → HTTP $HTTP"
+  echo "Request $i → HTTP $HTTP") &
 done
+wait 2>/dev/null
 ```
 
 ### Test Circuit Breaker
@@ -174,19 +175,20 @@ REG_ID=$(curl -s -X POST http://localhost:3000/api/v1/registrations \
  -d '{"workshopId":"ws-003"}' \
  | jq -r '.registration.id')
 
-KEY="idem-$(date +%s)-$RANDOM"
+# Idempotency key là 1 UUID v4
+KEY="550e8400-e29b-41d4-a716-446655440000"
 
 # Lần 1 → thanh toán thật, idempotent: false
 curl -s -X POST "http://localhost:3000/api/v1/payments/$REG_ID" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Idempotency-Key: $KEY" \
-  -H "Content-Type: application/json" | jq '{idempotent: .idempotent}'
+  -H "Content-Type: application/json" | jq '{idempotent: .idempotent, status: .registration.status}'
 
 # Lần 2 (cùng key) → cache hit, idempotent: true
 curl -s -X POST "http://localhost:3000/api/v1/payments/$REG_ID" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Idempotency-Key: $KEY" \
-  -H "Content-Type: application/json" | jq '{idempotent: .idempotent}'
+  -H "Content-Type: application/json" | jq '{idempotent: .idempotent, status: .registration.status}'
 ```
 
 ### Test CSV Import
@@ -203,7 +205,7 @@ curl -s -X POST http://localhost:3000/api/v1/admin/csv-imports/trigger \
 
 # Xem kết quả import
 curl -s http://localhost:3000/api/v1/admin/csv-imports \
-  -H "Authorization: Bearer $ORG_TOKEN" | jq '.imports[0]'
+  -H "Authorization: Bearer $ORG_TOKEN" | jq '.[0] | {status, totalRows, importedRows, skippedRows, errorRows}'
 ```
 
 ---
